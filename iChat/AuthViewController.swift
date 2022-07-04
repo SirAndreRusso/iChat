@@ -8,6 +8,7 @@
 import UIKit
 
 class AuthViewController: UIViewController {
+    
     let logoImageView = UIImageView(image: UIImage(named: "Logo"), contentMode: .scaleAspectFit)
     
     let googleLabel = UILabel(text: "Get started with")
@@ -21,18 +22,20 @@ class AuthViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        googleButton.customiedGoogleButton()
         view.backgroundColor = .white
         setUpConstraints()
         
     }
+}
+
+//MARK: - Setup constraints
+extension AuthViewController {
     private func setUpConstraints(){
         view.addSubview(logoImageView)
         logoImageView.translatesAutoresizingMaskIntoConstraints = false
         logoImageView.topAnchor.constraint(equalTo: view.topAnchor, constant: 160).isActive = true
         logoImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-       
-        
-        
         
         let googleView = ButtonFormView(label: googleLabel, button: googleButton)
         let emailView = ButtonFormView(label: emailLabel, button: eMailbutton)
@@ -47,11 +50,7 @@ class AuthViewController: UIViewController {
             stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 40),
             stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -40)
         ])
-        
-      
-        
     }
-
 }
 // MARK: - SwiftUI
 import SwiftUI
@@ -71,3 +70,4 @@ struct AuthViewControllerProvider: PreviewProvider {
  
     
 }
+
