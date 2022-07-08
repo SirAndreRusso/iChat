@@ -13,7 +13,7 @@ class SignUpViewController: UIViewController {
     let passwordLabel = UILabel(text: "Password")
     let confirmPasswordLabel = UILabel(text: "Confirm password")
     let alreadyOnboardLabel = UILabel(text: "Already onboard?")
-    let signUpButton = UIButton(title: "Sign Up", titleColor: .white, backGroundColor: .buttonDark(),  isShadow: true, cornerRadius: 4)
+    let signUpButton = UIButton(title: "Sign In", titleColor: .white, backGroundColor: .buttonDark(),  isShadow: true, cornerRadius: 4)
     let loginButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Login", for: .normal)
