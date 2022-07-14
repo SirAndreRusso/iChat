@@ -20,7 +20,16 @@ extension UIColor {
     static func textFieldLight() -> UIColor {
         return UIColor(red: 230.0/255.0, green: 230.0/255.0, blue: 230.0/255.0, alpha: 1.0/1.0)
     }
-   
+    static func gradientStartColor() -> UIColor {
+        return UIColor(red: 201.0/255.0, green: 161.0/255.0, blue: 240.0/255.0, alpha: 1.0/1.0)
+    }
+    static func gradientEndColor() -> UIColor {
+        return UIColor(red: 122.0/255.0, green: 178.0/255.0, blue: 235.0/255.0, alpha: 1.0/1.0)
+    }
+    static func sectionHeaderColor() -> UIColor {
+        return UIColor(red: 146.0/255.0, green: 146.0/255.0, blue: 146.0/255.0, alpha: 1.0/1.0)
+    }
+    
     }
  
 

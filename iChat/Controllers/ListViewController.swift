@@ -26,6 +26,15 @@ class ListViewController: UIViewController {
     enum Section: Int, CaseIterable{
         case waitingChats
         case activeChats
+        func description() -> String {
+            switch self {
+                
+            case .waitingChats:
+                return "Waiting chats"
+            case .activeChats:
+                return "Active chats"
+            }
+        }
     }
     var dataSource: UICollectionViewDiffableDataSource<Section, MChat>?
     override func viewDidLoad() {
@@ -50,9 +59,11 @@ class ListViewController: UIViewController {
         collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         collectionView.backgroundColor = .mainWhite()
         view.addSubview(collectionView)
-        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "CellId")
-        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "CellId2")
         
+        collectionView.register(ActiveChatCell.self, forCellWithReuseIdentifier: ActiveChatCell.reuseId)
+        collectionView.register(WaitingChatCell.self, forCellWithReuseIdentifier: WaitingChatCell.reuseId)
+        
+        collectionView.register(SectionHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: SectionHeader.reuseID)
     }
     private func reloadData() {
         var snapShop = NSDiffableDataSourceSnapshot<Section, MChat>()
@@ -64,6 +75,11 @@ class ListViewController: UIViewController {
 }
 //MARK: - DataSource
 extension ListViewController {
+    private func configure<T: SelfConfiguringCell>(cellType: T.Type, with value: MChat, for indexPath: IndexPath) -> T {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellType.reuseId, for: indexPath) as? T else {fatalError("Unable to dequeue \(cellType)")}
+        cell.configure(with: value)
+        return cell
+    }
     private func createDataSourse() {
         dataSource = UICollectionViewDiffableDataSource<Section, MChat>(collectionView: collectionView, cellProvider: { (collectionView, indexPath, chat) -> UICollectionViewCell? in
             guard let section = Section(rawValue: indexPath.section) else {
@@ -71,16 +87,21 @@ extension ListViewController {
             }
             switch section {
             case .activeChats:
-                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CellId", for: indexPath)
-                cell.backgroundColor = .systemBlue
-                return cell
+                return self.configure(cellType: ActiveChatCell.self, with: chat, for: indexPath)
             case .waitingChats:
-                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CellId2", for: indexPath)
-                cell.backgroundColor = .systemRed
-                return cell
+                return self.configure(cellType: WaitingChatCell.self, with: chat, for: indexPath)
             }
         })
-    }
+        dataSource?.supplementaryViewProvider = {
+            collectionView, kind, indexPath in
+            guard let sectionHeader = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: SectionHeader.reuseID, for: indexPath) as? SectionHeader
+            else {fatalError("Can not create new section header")}
+                guard let section = Section(rawValue: indexPath.section)
+                else {fatalError("Unknown section kind")}
+            sectionHeader.configure(text: section.description(), font: .laoSangamMN20(), textColor: .sectionHeaderColor())
+                 return sectionHeader
+                }
+            }
 }
 //MARK: - SetUp layout
 extension ListViewController {
@@ -96,6 +117,9 @@ extension ListViewController {
                 return self.createWaitingChats()
             }
         }
+        let config = UICollectionViewCompositionalLayoutConfiguration()
+        config.interSectionSpacing = 20
+        layout.configuration = config
             return layout
         }
     private func createWaitingChats()-> NSCollectionLayoutSection {
@@ -108,7 +132,8 @@ extension ListViewController {
         section.interGroupSpacing = 20
         section.contentInsets = NSDirectionalEdgeInsets(top: 16, leading: 20, bottom: 0, trailing: 20)
         section.orthogonalScrollingBehavior = .continuous
-        
+        let sectionHeader = createSectionHeader()
+        section.boundarySupplementaryItems = [sectionHeader]
         return section
     }
     
@@ -122,7 +147,15 @@ extension ListViewController {
         let section = NSCollectionLayoutSection(group: group)
         section.interGroupSpacing = 8
         section.contentInsets = NSDirectionalEdgeInsets(top: 16, leading: 20, bottom: 0, trailing: 20)
+        let sectionHeader = createSectionHeader()
+        section.boundarySupplementaryItems = [sectionHeader]
         return section
+    }
+    private func createSectionHeader() ->NSCollectionLayoutBoundarySupplementaryItem {
+        let sectionHeaderSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(1))
+        let sectionHeader = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: sectionHeaderSize, elementKind: UICollectionView.elementKindSectionHeader, alignment: .topLeading)
+        
+        return sectionHeader
     }
 }
 // MARK: - UISearchBarDelegate

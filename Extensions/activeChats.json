@@ -1,31 +1,31 @@
 [
     {
         "username": "Bob River",
-        "userImageString": "human1",
+        "userImageString": "Human1",
         "lastMessage": "How are you?",
         "id": 1
     },
     {
         "username": "John Black",
-        "userImageString": "human2",
+        "userImageString": "Human2",
         "lastMessage": "Where are you?",
         "id": 2
     },
     {
         "username": "Misha Red",
-        "userImageString": "human3",
+        "userImageString": "Human3",
         "lastMessage": "Who are you?",
         "id": 3
     },
     {
         "username": "Alex Film",
-        "userImageString": "human4",
+        "userImageString": "Human4",
         "lastMessage": "How old are you?",
         "id": 4
     },
     {
         "username": "Robert Martin",
-        "userImageString": "human5",
+        "userImageString": "Human5",
         "lastMessage": "Where are we?",
         "id": 5
     }
