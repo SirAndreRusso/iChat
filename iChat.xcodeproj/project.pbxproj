@@ -37,6 +37,9 @@
 		B4C622122864FD52002F25BD /* AuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4C622112864FD52002F25BD /* AuthViewController.swift */; };
 		B4C622172864FD54002F25BD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B4C622162864FD54002F25BD /* Assets.xcassets */; };
 		B4C6221A2864FD54002F25BD /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B4C622182864FD54002F25BD /* LaunchScreen.storyboard */; };
+		B4D607BF2881CFE3008372CE /* users.json in Resources */ = {isa = PBXBuildFile; fileRef = B4D607BE2881CFE3008372CE /* users.json */; };
+		B4D607C12881D1F5008372CE /* Muser.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D607C02881D1F5008372CE /* Muser.swift */; };
+		B4D607C42881D241008372CE /* MChat.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D607C32881D241008372CE /* MChat.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -72,6 +75,9 @@
 		B4C622162864FD54002F25BD /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B4C622192864FD54002F25BD /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		B4C6221B2864FD54002F25BD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B4D607BE2881CFE3008372CE /* users.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = users.json; path = "../../../../Downloads/20. урок/IChat/users.json"; sourceTree = "<group>"; };
+		B4D607C02881D1F5008372CE /* Muser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Muser.swift; sourceTree = "<group>"; };
+		B4D607C32881D241008372CE /* MChat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MChat.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -118,6 +124,7 @@
 				B4A7677A2880604600FB84E4 /* GradientView.swift */,
 				B41583612877617400AFEEBF /* activeChats.json */,
 				B41583622877617400AFEEBF /* waitingChats.json */,
+				B4D607BE2881CFE3008372CE /* users.json */,
 				B45771082865CA09001395DA /* UIKit */,
 			);
 			path = Extensions;
@@ -177,6 +184,7 @@
 			children = (
 				B4C6220D2864FD52002F25BD /* AppDelegate.swift */,
 				B4C6220F2864FD52002F25BD /* SceneDelegate.swift */,
+				B4D607C22881D229008372CE /* Model */,
 				B42627272874F14100CA976D /* Controllers */,
 				B42627242874F04A00CA976D /* SignIn&Auth */,
 				B4BFC23A2865E9B400676F70 /* .gitignore */,
@@ -185,6 +193,15 @@
 				B4C6221B2864FD54002F25BD /* Info.plist */,
 			);
 			path = iChat;
+			sourceTree = "<group>";
+		};
+		B4D607C22881D229008372CE /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				B4D607C02881D1F5008372CE /* Muser.swift */,
+				B4D607C32881D241008372CE /* MChat.swift */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -245,6 +262,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B4D607BF2881CFE3008372CE /* users.json in Resources */,
 				B4C6221A2864FD54002F25BD /* LaunchScreen.storyboard in Resources */,
 				B4BFC23B2865E9B400676F70 /* .gitignore in Resources */,
 				B41583642877617400AFEEBF /* waitingChats.json in Resources */,
@@ -260,6 +278,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B4D607C42881D241008372CE /* MChat.swift in Sources */,
 				B42627262874F0B300CA976D /* ListViewController.swift in Sources */,
 				B426271B2873383D00CA976D /* OneLineTextField.swift in Sources */,
 				B4A7678228807C2600FB84E4 /* SectionHeader.swift in Sources */,
@@ -280,6 +299,7 @@
 				B4A7677F28806F0300FB84E4 /* SelfConfigurationCell.swift in Sources */,
 				B4262723287392F600CA976D /* UISegmentedControl + Extension.swift in Sources */,
 				B4A7677D28806D8900FB84E4 /* WaitingChatCell.swift in Sources */,
+				B4D607C12881D1F5008372CE /* Muser.swift in Sources */,
 				B4BFC2392865E73100676F70 /* UIStackView + Extention.swift in Sources */,
 				B45771002865BE69001395DA /* UIColor + Extension.swift in Sources */,
 				B4C622102864FD52002F25BD /* SceneDelegate.swift in Sources */,
