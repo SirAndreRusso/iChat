@@ -29,7 +29,7 @@ override func viewDidLoad() {
     setUpSearchBar()
     setUpCollectionView()
     createDataSource()
-    reloadData()
+    reloadData(with: nil)
 }
     private func setUpCollectionView(){
         collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: createCompositionalLayout())
@@ -38,8 +38,7 @@ override func viewDidLoad() {
         view.addSubview(collectionView)
         
         collectionView.register(SectionHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: SectionHeader.reuseID)
-
-        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "CellId")
+        collectionView.register(UserCell.self, forCellWithReuseIdentifier: UserCell.reuseId)
     }
 private func setUpSearchBar() {
     navigationController?.navigationBar.barTintColor = .mainWhite()
@@ -51,10 +50,13 @@ private func setUpSearchBar() {
     searchController.obscuresBackgroundDuringPresentation = false
     searchController.searchBar.delegate = self
 }
-    private func reloadData() {
+    private func reloadData(with searchText: String?) {
+        let filtred = users.filter { (user) -> Bool in
+            user.contains(filter: searchText)
+        }
         var snapShop = NSDiffableDataSourceSnapshot<Section, MUser>()
         snapShop.appendSections([.users])
-        snapShop.appendItems(users, toSection: .users)
+        snapShop.appendItems(filtred, toSection: .users)
         dataSource?.apply(snapShop, animatingDifferences: true)
     }
 }
@@ -67,9 +69,7 @@ extension PeopleViewController {
             switch section {
                 
             case .users:
-                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CellId", for: indexPath)
-                cell.backgroundColor = .systemBlue
-                return cell
+                return self.configure(collectionView: collectionView, cellType: UserCell.self, with: user, for: indexPath)
             }
         })
         dataSource?.supplementaryViewProvider = {
@@ -144,7 +144,7 @@ private func createCompositionalLayout() -> UICollectionViewLayout {
 // MARK: - UISearchBarDelegate
 extension PeopleViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        print(searchText)
+       reloadData(with: searchText)
     }
 }
 

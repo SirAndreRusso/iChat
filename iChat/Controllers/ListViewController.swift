@@ -28,18 +28,8 @@ class ListViewController: UIViewController {
         super.viewDidLoad()
         setUpCollectionView()
         setUpSearchBar()
-        createDataSourse()
+        createDataSourсe()
         reloadData()
-    }
-    private func setUpSearchBar() {
-        navigationController?.navigationBar.barTintColor = .mainWhite()
-        navigationController?.navigationBar.shadowImage = UIImage()
-        let searchController = UISearchController(searchResultsController: nil)
-        navigationItem.searchController = searchController
-        navigationItem.hidesSearchBarWhenScrolling = false
-        searchController.hidesNavigationBarDuringPresentation = false
-        searchController.obscuresBackgroundDuringPresentation = false
-        searchController.searchBar.delegate = self
     }
     private func setUpCollectionView(){
         collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: createCompositionalLayout())
@@ -59,24 +49,33 @@ class ListViewController: UIViewController {
         snapShop.appendItems(waitingChats, toSection: .waitingChats)
         dataSource?.apply(snapShop, animatingDifferences: true)
     }
+    private func setUpSearchBar() {
+        navigationController?.navigationBar.barTintColor = .mainWhite()
+        navigationController?.navigationBar.shadowImage = UIImage()
+        let searchController = UISearchController(searchResultsController: nil)
+        navigationItem.searchController = searchController
+        navigationItem.hidesSearchBarWhenScrolling = false
+        searchController.hidesNavigationBarDuringPresentation = false
+        searchController.obscuresBackgroundDuringPresentation = false
+        searchController.searchBar.delegate = self
+    }
+   
 }
 //MARK: - DataSource
 extension ListViewController {
-    private func configure<T: SelfConfiguringCell>(cellType: T.Type, with value: MChat, for indexPath: IndexPath) -> T {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellType.reuseId, for: indexPath) as? T else {fatalError("Unable to dequeue \(cellType)")}
-        cell.configure(with: value)
-        return cell
-    }
-    private func createDataSourse() {
+    
+    private func createDataSourсe() {
         dataSource = UICollectionViewDiffableDataSource<Section, MChat>(collectionView: collectionView, cellProvider: { (collectionView, indexPath, chat) -> UICollectionViewCell? in
             guard let section = Section(rawValue: indexPath.section) else {
                 fatalError("Unknown section")
             }
             switch section {
             case .activeChats:
-                return self.configure(cellType: ActiveChatCell.self, with: chat, for: indexPath)
+                return self.configure(collectionView: collectionView, cellType: ActiveChatCell.self, with: chat, for: indexPath)
+
             case .waitingChats:
-                return self.configure(cellType: WaitingChatCell.self, with: chat, for: indexPath)
+                return self.configure(collectionView: collectionView, cellType: WaitingChatCell.self, with: chat, for: indexPath)
+
             }
         })
         dataSource?.supplementaryViewProvider = {

@@ -29,7 +29,9 @@ extension UIColor {
     static func sectionHeaderColor() -> UIColor {
         return UIColor(red: 146.0/255.0, green: 146.0/255.0, blue: 146.0/255.0, alpha: 1.0/1.0)
     }
-    
+    static func cellShadowColor() -> UIColor {
+        return UIColor(red: 189.0/255.0, green: 189.0/255.0, blue: 189.0/255.0, alpha: 1.0/1.0)
+    }
     }
  
 
