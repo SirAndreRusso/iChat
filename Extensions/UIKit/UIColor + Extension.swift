@@ -32,6 +32,9 @@ extension UIColor {
     static func cellShadowColor() -> UIColor {
         return UIColor(red: 189.0/255.0, green: 189.0/255.0, blue: 189.0/255.0, alpha: 1.0/1.0)
     }
+    static func denyButtonColor() -> UIColor {
+        return UIColor(red: 213.0/255.0, green: 51.0/255.0, blue: 51.0/255.0, alpha: 1.0/1.0)
+    }
     }
  
 

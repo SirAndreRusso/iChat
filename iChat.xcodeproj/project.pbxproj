@@ -42,6 +42,10 @@
 		B4D607C42881D241008372CE /* MChat.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D607C32881D241008372CE /* MChat.swift */; };
 		B4D607C628871BFA008372CE /* UserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D607C528871BFA008372CE /* UserCell.swift */; };
 		B4D607C828871F94008372CE /* UIViewController Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D607C728871F94008372CE /* UIViewController Extension.swift */; };
+		B4D607CA28875501008372CE /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D607C928875501008372CE /* ProfileViewController.swift */; };
+		B4D607CC28885869008372CE /* Insertable TextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D607CB28885869008372CE /* Insertable TextField.swift */; };
+		B4D607CE28885FF1008372CE /* UIView + Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D607CD28885FF1008372CE /* UIView + Extension.swift */; };
+		B4D607D028887294008372CE /* ChatRequestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D607CF28887294008372CE /* ChatRequestViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -82,6 +86,10 @@
 		B4D607C32881D241008372CE /* MChat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MChat.swift; sourceTree = "<group>"; };
 		B4D607C528871BFA008372CE /* UserCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCell.swift; sourceTree = "<group>"; };
 		B4D607C728871F94008372CE /* UIViewController Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController Extension.swift"; sourceTree = "<group>"; };
+		B4D607C928875501008372CE /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
+		B4D607CB28885869008372CE /* Insertable TextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Insertable TextField.swift"; sourceTree = "<group>"; };
+		B4D607CD28885FF1008372CE /* UIView + Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView + Extension.swift"; sourceTree = "<group>"; };
+		B4D607CF28887294008372CE /* ChatRequestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRequestViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -113,6 +121,8 @@
 				B42627252874F0B300CA976D /* ListViewController.swift */,
 				B42627282874F17600CA976D /* MainTabBarController.swift */,
 				B426272A2874F1D800CA976D /* PeopleViewController.swift */,
+				B4D607C928875501008372CE /* ProfileViewController.swift */,
+				B4D607CF28887294008372CE /* ChatRequestViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -122,6 +132,7 @@
 			children = (
 				B4A7678028806F5600FB84E4 /* Protocols */,
 				B426271A2873383D00CA976D /* OneLineTextField.swift */,
+				B4D607CB28885869008372CE /* Insertable TextField.swift */,
 				B45771092865CD0D001395DA /* ButtonFormView.swift */,
 				B42627202873819000CA976D /* AddphotoView.swift */,
 				B41583652877620900AFEEBF /* Bundle-Decodable.swift */,
@@ -145,6 +156,7 @@
 				B45770FB28651646001395DA /* UIbutton + Extension.swift */,
 				B4262722287392F600CA976D /* UISegmentedControl + Extension.swift */,
 				B4D607C728871F94008372CE /* UIViewController Extension.swift */,
+				B4D607CD28885FF1008372CE /* UIView + Extension.swift */,
 			);
 			path = UIKit;
 			sourceTree = "<group>";
@@ -296,12 +308,16 @@
 				B426272B2874F1D800CA976D /* PeopleViewController.swift in Sources */,
 				B42627212873819000CA976D /* AddphotoView.swift in Sources */,
 				B41583662877620900AFEEBF /* Bundle-Decodable.swift in Sources */,
+				B4D607CC28885869008372CE /* Insertable TextField.swift in Sources */,
+				B4D607CA28875501008372CE /* ProfileViewController.swift in Sources */,
 				B45770FE2865BC84001395DA /* UIFont + Extension.swift in Sources */,
+				B4D607D028887294008372CE /* ChatRequestViewController.swift in Sources */,
 				B4C622122864FD52002F25BD /* AuthViewController.swift in Sources */,
 				B4C6220E2864FD52002F25BD /* AppDelegate.swift in Sources */,
 				B457710A2865CD0D001395DA /* ButtonFormView.swift in Sources */,
 				B45771022865C439001395DA /* UILabel + Extension.swift in Sources */,
 				B45771042865C711001395DA /* UIImageView + Extension.swift in Sources */,
+				B4D607CE28885FF1008372CE /* UIView + Extension.swift in Sources */,
 				B4A7677F28806F0300FB84E4 /* SelfConfigurationCell.swift in Sources */,
 				B4262723287392F600CA976D /* UISegmentedControl + Extension.swift in Sources */,
 				B4D607C628871BFA008372CE /* UserCell.swift in Sources */,

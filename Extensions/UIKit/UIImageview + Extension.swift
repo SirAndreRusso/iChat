@@ -14,3 +14,11 @@ extension UIImageView {
         self.contentMode = contentMode
     }
 }
+extension UIImageView {
+    // Меняет цвет картинки
+    func setupColor(color: UIColor) {
+        let templateImage = self.image?.withRenderingMode(.alwaysTemplate)
+        self.image = templateImage
+        self.tintColor = color
+    }
+}
