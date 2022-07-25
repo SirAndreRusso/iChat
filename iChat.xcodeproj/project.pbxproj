@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		721144BFF647A93853461F4F /* Pods_iChat.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30AB2B059A12B994C498299E /* Pods_iChat.framework */; };
 		B41429B9288F08BA002215A5 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B41429B8288F08BA002215A5 /* AuthService.swift */; };
+		B41429BB288F422C002215A5 /* Validators.swift in Sources */ = {isa = PBXBuildFile; fileRef = B41429BA288F422C002215A5 /* Validators.swift */; };
+		B41429BD288F46AC002215A5 /* AuthErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = B41429BC288F46AC002215A5 /* AuthErrors.swift */; };
 		B41583662877620900AFEEBF /* Bundle-Decodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = B41583652877620900AFEEBF /* Bundle-Decodable.swift */; };
 		B4262719287333E400CA976D /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4262718287333E400CA976D /* SignUpViewController.swift */; };
 		B426271B2873383D00CA976D /* OneLineTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = B426271A2873383D00CA976D /* OneLineTextField.swift */; };
@@ -55,6 +57,8 @@
 		3068A042296897D40319BEDD /* Pods-iChat.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iChat.debug.xcconfig"; path = "Target Support Files/Pods-iChat/Pods-iChat.debug.xcconfig"; sourceTree = "<group>"; };
 		30AB2B059A12B994C498299E /* Pods_iChat.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_iChat.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B41429B8288F08BA002215A5 /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
+		B41429BA288F422C002215A5 /* Validators.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Validators.swift; sourceTree = "<group>"; };
+		B41429BC288F46AC002215A5 /* AuthErrors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthErrors.swift; sourceTree = "<group>"; };
 		B41583652877620900AFEEBF /* Bundle-Decodable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Bundle-Decodable.swift"; sourceTree = "<group>"; };
 		B4262718287333E400CA976D /* SignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
 		B426271A2873383D00CA976D /* OneLineTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OneLineTextField.swift; sourceTree = "<group>"; };
@@ -128,6 +132,15 @@
 				B41429B8288F08BA002215A5 /* AuthService.swift */,
 			);
 			path = Services;
+			sourceTree = "<group>";
+		};
+		B41429BE288F4B80002215A5 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				B41429BA288F422C002215A5 /* Validators.swift */,
+				B41429BC288F46AC002215A5 /* AuthErrors.swift */,
+			);
+			path = Helpers;
 			sourceTree = "<group>";
 		};
 		B42627242874F04A00CA976D /* SignIn&Auth */ = {
@@ -238,6 +251,7 @@
 				B4C622182864FD54002F25BD /* LaunchScreen.storyboard */,
 				B4C6221B2864FD54002F25BD /* Info.plist */,
 				B4D607D1288EF0C7008372CE /* GoogleService-Info.plist */,
+				B41429BE288F4B80002215A5 /* Helpers */,
 				B45771052865C97A001395DA /* Extensions */,
 			);
 			path = iChat;
@@ -387,6 +401,7 @@
 				B42627292874F17600CA976D /* MainTabBarController.swift in Sources */,
 				B4262719287333E400CA976D /* SignUpViewController.swift in Sources */,
 				B4A767792880441800FB84E4 /* ActiveChatCell.swift in Sources */,
+				B41429BB288F422C002215A5 /* Validators.swift in Sources */,
 				B426271F28737E5700CA976D /* SetUpProfileViewController.swift in Sources */,
 				B426272B2874F1D800CA976D /* PeopleViewController.swift in Sources */,
 				B42627212873819000CA976D /* AddphotoView.swift in Sources */,
@@ -412,6 +427,7 @@
 				B4C622102864FD52002F25BD /* SceneDelegate.swift in Sources */,
 				B41429B9288F08BA002215A5 /* AuthService.swift in Sources */,
 				B426271D287347C900CA976D /* LoginViewController.swift in Sources */,
+				B41429BD288F46AC002215A5 /* AuthErrors.swift in Sources */,
 				B45770FC28651646001395DA /* UIbutton + Extension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
