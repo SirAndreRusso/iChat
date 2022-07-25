@@ -25,12 +25,26 @@ class LoginViewController: UIViewController {
     }()
     let emailTextField = OneLineTextField(font: .avenir20())
     let passwordTextField = OneLineTextField(font: .avenir20())
+    
+    //Actions
+    lazy var loginButtonAction = UIAction {_ in
+        AuthService.shared.login(email: self.emailTextField.text!, password: self.passwordTextField.text!) { (result) in
+            switch result {
+                
+            case .success(let user):
+                self.showAlert(with: "Success", and: "You loged in successfully")
+            case .failure(let error):
+                self.showAlert(with: "error", and: error.localizedDescription)
+            }
+        }
+     }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         googleButton.customiedGoogleButton()
         view.backgroundColor = .white
         setUpConstraints()
-       
+        loginButton.addAction(loginButtonAction, for: .touchUpInside)
     }
 }
 // MARK: - Setup constraints

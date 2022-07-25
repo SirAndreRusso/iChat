@@ -20,10 +20,19 @@ class SetUpProfileViewController: UIViewController {
     let goToChatsButton = UIButton(title: "Go to chats!", titleColor: .white, backGroundColor: .buttonDark(),  isShadow: true, cornerRadius: 4)
 
     let fillImageView = AddPhotoView()
+    
+    //Actions
+    lazy var goToChatsButtonAction = UIAction { _ in
+        print("123")
+    }
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
         setUpConstraints()
+        goToChatsButton.addAction(goToChatsButtonAction, for: .touchUpInside)
+        
     }
 }
 // MARK: - Setup constraints
