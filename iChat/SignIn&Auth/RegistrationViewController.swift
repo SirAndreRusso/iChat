@@ -34,7 +34,7 @@ class RegistrationViewController: UIViewController {
                 
             case .success(let user):
                 self.showAlert(with: "Успешно", and: "Теперь вы зарегистрированы в iChat") {
-                    self.present(SetUpProfileViewController(), animated: true)
+                    self.present(SetUpProfileViewController(currentUser: user), animated: true)
                 }
             case .failure(let error):
                 self.showAlert(with: "Ошибка", and: error.localizedDescription)

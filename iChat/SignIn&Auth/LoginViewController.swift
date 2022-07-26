@@ -6,10 +6,6 @@
 //
 
 import UIKit
-protocol AuthNavigationDelegate: AnyObject {
-    func toLoginVC()
-    func toRegistrationVC()
-}
 
 class LoginViewController: UIViewController {
     let welcomeLabel = UILabel(text: "Welcome back")
