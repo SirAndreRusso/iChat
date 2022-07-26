@@ -12,22 +12,22 @@ class AuthViewController: UIViewController {
     let logoImageView = UIImageView(image: UIImage(named: "Logo"), contentMode: .scaleAspectFit)
     
     let googleLabel = UILabel(text: "Get started with")
-    let emailLabel = UILabel(text: "Or sign up with")
+    let emailLabel = UILabel(text: "Or register with")
     let alreadyOnboardLabel = UILabel(text: "Already onboard?")
     
     
     let googleButton = UIButton(title: "Google", titleColor: .black, backGroundColor: .white, isShadow: true)
     let eMailbutton = UIButton(title: "E-mail", titleColor: .white, backGroundColor: .buttonDark(),  isShadow: false)
     let loginButton = UIButton(title: "Login", titleColor: .buttonRed(), backGroundColor: .white,  isShadow: true)
-    let signUpVC = SignUpViewController()
-    let loginVC = LoginViewController()
+    lazy var registrationVC = RegistrationViewController()
+    lazy var loginVC = LoginViewController()
     
-    // Actions
+//    // Actions
     lazy var emailButtonAction = UIAction {_ in
-        self.present(self.signUpVC, animated: true, completion: nil)
+        self.present(self.registrationVC, animated: true, completion: nil)
      }
     lazy var loginButtonAction = UIAction {_ in
-         self.present(self.loginVC, animated: true, completion: nil)
+        self.present(self.loginVC, animated: true, completion: nil)
      }
     
     override func viewDidLoad() {
@@ -35,6 +35,8 @@ class AuthViewController: UIViewController {
         googleButton.customiedGoogleButton()
         view.backgroundColor = .white
         setUpConstraints()
+        registrationVC.delegate = self
+        loginVC.delegate = self
         eMailbutton.addAction(emailButtonAction, for: .touchUpInside)
         loginButton.addAction(loginButtonAction, for: .touchUpInside)
     }
@@ -62,6 +64,18 @@ extension AuthViewController {
             stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -40)
         ])
     }
+}
+// MARK: - AuthNavigationDelegate
+extension AuthViewController: AuthNavigationDelegate {
+    func toLoginVC() {
+        present(loginVC, animated: true)
+    }
+    
+    func toRegistrationVC() {
+        present(registrationVC, animated: true)
+    }
+    
+    
 }
 // MARK: - SwiftUI
 import SwiftUI

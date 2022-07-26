@@ -6,6 +6,10 @@
 //
 
 import UIKit
+protocol AuthNavigationDelegate: AnyObject {
+    func toLoginVC()
+    func toRegistrationVC()
+}
 
 class LoginViewController: UIViewController {
     let welcomeLabel = UILabel(text: "Welcome back")
@@ -16,9 +20,9 @@ class LoginViewController: UIViewController {
     let needAnAccountLabel = UILabel(text: "Need an account?")
     let googleButton = UIButton(title: "Google", titleColor: .black, backGroundColor: .white,  isShadow: true)
     let loginButton = UIButton(title: "Login", titleColor: .white, backGroundColor: .buttonDark(),  isShadow: false, cornerRadius: 4)
-    let signInButton: UIButton = {
+    let registrationButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Sign in", for: .normal)
+        button.setTitle("Register", for: .normal)
         button.setTitleColor(.buttonRed(), for: .normal)
         button.titleLabel?.font = .avenir20()
         return button
@@ -38,13 +42,19 @@ class LoginViewController: UIViewController {
             }
         }
      }
-    
+    lazy var registrationButtonAction = UIAction{_ in
+        self.dismiss(animated: true) {
+            self.delegate?.toRegistrationVC()
+        }
+    }
+    weak var delegate: AuthNavigationDelegate?
     override func viewDidLoad() {
         super.viewDidLoad()
         googleButton.customiedGoogleButton()
         view.backgroundColor = .white
         setUpConstraints()
         loginButton.addAction(loginButtonAction, for: .touchUpInside)
+        registrationButton.addAction(registrationButtonAction, for: .touchUpInside)
     }
 }
 // MARK: - Setup constraints
@@ -55,8 +65,8 @@ extension LoginViewController {
         let passwordStackView = UIStackView(arrangedSubviews: [passwordLabel, passwordTextField], axis: .vertical, spacing: 0)
         loginButton.heightAnchor.constraint(equalToConstant: 60).isActive = true
         let stackView = UIStackView(arrangedSubviews: [loginWithView, orLabel, emailStackView, passwordStackView, loginButton], axis: .vertical, spacing: 40)
-        signInButton.contentHorizontalAlignment = .leading
-        let bottomStackView = UIStackView(arrangedSubviews: [needAnAccountLabel, signInButton], axis: .horizontal, spacing: 10)
+        registrationButton.contentHorizontalAlignment = .leading
+        let bottomStackView = UIStackView(arrangedSubviews: [needAnAccountLabel, registrationButton], axis: .horizontal, spacing: 10)
         bottomStackView.alignment = .firstBaseline
         welcomeLabel.translatesAutoresizingMaskIntoConstraints = false
         stackView.translatesAutoresizingMaskIntoConstraints = false

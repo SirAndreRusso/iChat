@@ -7,13 +7,13 @@
 
 import UIKit
 
-class SignUpViewController: UIViewController {
+class RegistrationViewController: UIViewController {
     let welcomeLabel = UILabel(text: "Glad to see you!")
     let emailLabel = UILabel(text: "E-mail")
     let passwordLabel = UILabel(text: "Password")
     let confirmPasswordLabel = UILabel(text: "Confirm password")
     let alreadyOnboardLabel = UILabel(text: "Already onboard?")
-    let signUpButton = UIButton(title: "Sign In", titleColor: .white, backGroundColor: .buttonDark(),  isShadow: true, cornerRadius: 4)
+    let registrationButton = UIButton(title: "Register", titleColor: .white, backGroundColor: .buttonDark(),  isShadow: true, cornerRadius: 4)
     let loginButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Login", for: .normal)
@@ -24,25 +24,32 @@ class SignUpViewController: UIViewController {
     let emailTextField = OneLineTextField(font: .avenir20())
     let passwordTextField = OneLineTextField(font: .avenir20())
     let confirmPasswordTextField = OneLineTextField(font: .avenir20())
+//    lazy var setupProfileVC = SetUpProfileViewController()
+    weak var delegate: AuthNavigationDelegate?
     
     //Actions
-    lazy var signApButtonAction = UIAction { _ in
+    lazy var signInButtonAction = UIAction { _ in
         AuthService.shared.register(email: self.emailTextField.text, password: self.passwordTextField.text, confirmPassword: self.confirmPasswordTextField.text) { (result) in
             switch result {
                 
             case .success(let user):
-                self.showAlert(with: "Успешно", and: "Вы зареганы")
-                print(user.email)
+                self.showAlert(with: "Успешно", and: "Теперь вы зарегистрированы в iChat") {
+                    self.present(SetUpProfileViewController(), animated: true)
+                }
             case .failure(let error):
                 self.showAlert(with: "Ошибка", and: error.localizedDescription)
             }
         }
     }
-
+    lazy var loginButtonAction = UIAction {_ in
+        self.dismiss(animated: true) {
+            self.delegate?.toLoginVC()
+        }}
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpConstraints()
-        signUpButton.addAction(signApButtonAction, for: .touchUpInside)
+        registrationButton.addAction(signInButtonAction, for: .touchUpInside)
+        loginButton.addAction(loginButtonAction, for: .touchUpInside)
     }
     
 
@@ -55,7 +62,7 @@ struct SignUpViewControllerProvider: PreviewProvider {
         ContainerView().edgesIgnoringSafeArea(.all)
     }
     struct ContainerView: UIViewControllerRepresentable {
-        let signUpViewController = SignUpViewController()
+        let signUpViewController = RegistrationViewController()
         func makeUIViewController(context: Context) -> some UIViewController {
             return signUpViewController
         }
@@ -64,14 +71,14 @@ struct SignUpViewControllerProvider: PreviewProvider {
         }
     }
 }
-extension SignUpViewController {
+extension RegistrationViewController {
     private func setUpConstraints(){
         view.backgroundColor = .white
         let emailStackView = UIStackView(arrangedSubviews: [emailLabel, emailTextField], axis: .vertical, spacing: 0)
         let passWordStackView = UIStackView(arrangedSubviews: [passwordLabel, passwordTextField], axis: .vertical, spacing: 0)
         let confirmPasswordStackView = UIStackView(arrangedSubviews: [confirmPasswordLabel, confirmPasswordTextField], axis: .vertical, spacing: 0)
-        signUpButton.heightAnchor.constraint(equalToConstant: 60).isActive = true
-        let stackView = UIStackView(arrangedSubviews: [emailStackView, passWordStackView, confirmPasswordStackView, signUpButton], axis: .vertical, spacing: 40)
+        registrationButton.heightAnchor.constraint(equalToConstant: 60).isActive = true
+        let stackView = UIStackView(arrangedSubviews: [emailStackView, passWordStackView, confirmPasswordStackView, registrationButton], axis: .vertical, spacing: 40)
         loginButton.contentHorizontalAlignment = .leading
         let bottomStackView = UIStackView(arrangedSubviews: [alreadyOnboardLabel, loginButton], axis: .horizontal, spacing: 10)
         bottomStackView.alignment = .firstBaseline
@@ -96,9 +103,12 @@ extension SignUpViewController {
     }
 }
 extension UIViewController {
-    func showAlert(with title: String, and message: String) {
+    func showAlert(with title: String, and message: String, completion: @escaping () -> Void = {}) {
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        let okAction = UIAlertAction(title: "OK", style: .default)
+        let okAction = UIAlertAction(title: "OK", style: .default) {(_) in
+            completion()
+        }
+        
         alertController.addAction(okAction)
         present(alertController, animated: true)
     }

@@ -12,7 +12,7 @@
 		B41429BB288F422C002215A5 /* Validators.swift in Sources */ = {isa = PBXBuildFile; fileRef = B41429BA288F422C002215A5 /* Validators.swift */; };
 		B41429BD288F46AC002215A5 /* AuthErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = B41429BC288F46AC002215A5 /* AuthErrors.swift */; };
 		B41583662877620900AFEEBF /* Bundle-Decodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = B41583652877620900AFEEBF /* Bundle-Decodable.swift */; };
-		B4262719287333E400CA976D /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4262718287333E400CA976D /* SignUpViewController.swift */; };
+		B4262719287333E400CA976D /* RegistrationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4262718287333E400CA976D /* RegistrationViewController.swift */; };
 		B426271B2873383D00CA976D /* OneLineTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = B426271A2873383D00CA976D /* OneLineTextField.swift */; };
 		B426271D287347C900CA976D /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B426271C287347C900CA976D /* LoginViewController.swift */; };
 		B426271F28737E5700CA976D /* SetUpProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B426271E28737E5700CA976D /* SetUpProfileViewController.swift */; };
@@ -60,7 +60,7 @@
 		B41429BA288F422C002215A5 /* Validators.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Validators.swift; sourceTree = "<group>"; };
 		B41429BC288F46AC002215A5 /* AuthErrors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthErrors.swift; sourceTree = "<group>"; };
 		B41583652877620900AFEEBF /* Bundle-Decodable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Bundle-Decodable.swift"; sourceTree = "<group>"; };
-		B4262718287333E400CA976D /* SignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
+		B4262718287333E400CA976D /* RegistrationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationViewController.swift; sourceTree = "<group>"; };
 		B426271A2873383D00CA976D /* OneLineTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OneLineTextField.swift; sourceTree = "<group>"; };
 		B426271C287347C900CA976D /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		B426271E28737E5700CA976D /* SetUpProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetUpProfileViewController.swift; sourceTree = "<group>"; };
@@ -149,7 +149,7 @@
 				B4C622112864FD52002F25BD /* AuthViewController.swift */,
 				B426271C287347C900CA976D /* LoginViewController.swift */,
 				B426271E28737E5700CA976D /* SetUpProfileViewController.swift */,
-				B4262718287333E400CA976D /* SignUpViewController.swift */,
+				B4262718287333E400CA976D /* RegistrationViewController.swift */,
 			);
 			path = "SignIn&Auth";
 			sourceTree = "<group>";
@@ -399,7 +399,7 @@
 				B4A7678228807C2600FB84E4 /* SectionHeader.swift in Sources */,
 				B4A7677B2880604600FB84E4 /* GradientView.swift in Sources */,
 				B42627292874F17600CA976D /* MainTabBarController.swift in Sources */,
-				B4262719287333E400CA976D /* SignUpViewController.swift in Sources */,
+				B4262719287333E400CA976D /* RegistrationViewController.swift in Sources */,
 				B4A767792880441800FB84E4 /* ActiveChatCell.swift in Sources */,
 				B41429BB288F422C002215A5 /* Validators.swift in Sources */,
 				B426271F28737E5700CA976D /* SetUpProfileViewController.swift in Sources */,
