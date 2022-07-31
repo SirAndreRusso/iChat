@@ -32,9 +32,19 @@ class LoginViewController: UIViewController {
             switch result {
                 
             case .success(let user):
-                self.showAlert(with: "Success", and: "You loged in successfully")
+                self.showAlert(with: "", and: "Вы успешно авторизованы") {
+                FirestoreService.shared.getUserData(user: user) { (result) in
+                    switch result {
+                        
+                    case .success(let muser):
+                        self.present(MainTabBarController(), animated: true)
+                    case .failure(let error):
+                        self.present(SetUpProfileViewController(currentUser: user), animated: true)
+                    }
+                }
+                }
             case .failure(let error):
-                self.showAlert(with: "error", and: error.localizedDescription)
+                self.showAlert(with: "Ошибка!", and: error.localizedDescription)
             }
         }
      }

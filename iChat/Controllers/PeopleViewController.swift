@@ -6,9 +6,11 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 class PeopleViewController: UIViewController {
-    var users: [MUser] = Bundle.main.decode([MUser].self, from: "users.json")
+//    var users: [MUser] = Bundle.main.decode([MUser].self, from: "users.json")
+    var users = [MUser]()
     var collectionView: UICollectionView!
     var dataSource: UICollectionViewDiffableDataSource<Section, MUser>!
     enum Section: Int, CaseIterable{
@@ -30,7 +32,22 @@ override func viewDidLoad() {
     setUpCollectionView()
     createDataSource()
     reloadData(with: nil)
+    navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Log Out", style: .plain, target: self, action: #selector(signOut))
 }
+    @objc private func signOut(){
+        let alertController = UIAlertController(title: nil, message: "Are you shure you want to sign out?", preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        alertController.addAction(UIAlertAction(title: "Sign out", style: .destructive, handler: {(_) in
+            do {
+                try Auth.auth().signOut()
+                UIApplication.shared.keyWindow?.rootViewController = AuthViewController()
+            } catch {
+                print("Sign out error \(error.localizedDescription)")
+            }
+            
+        }))
+        present(alertController, animated: true)
+    }
     private func setUpCollectionView(){
         collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: createCompositionalLayout())
         collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]

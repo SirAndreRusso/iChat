@@ -37,8 +37,9 @@ class SetUpProfileViewController: UIViewController {
             switch result {
                 
             case .success(let muser):
-                self.showAlert(with: "Успешно!", and: "Приятного общения!")
-                print(muser)
+                self.showAlert(with: "Успешно!", and: "Приятного общения!") {
+                    self.present(MainTabBarController(), animated: true)
+                }
             case .failure(let error):
                 self.showAlert(with: "Ошибка", and: error.localizedDescription)
             }
@@ -73,7 +74,7 @@ extension SetUpProfileViewController {
        view.addSubview(goToChatsButton)
     
        NSLayoutConstraint.activate([
-        welcomeLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 160),
+        welcomeLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 120),
         welcomeLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
         
         
