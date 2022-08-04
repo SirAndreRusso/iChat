@@ -8,6 +8,7 @@
 import UIKit
 import FirebaseAuth
 
+
 class SetUpProfileViewController: UIViewController {
 
     let welcomeLabel = UILabel(text: "Set up Profile!", font: .avenir26())
@@ -38,7 +39,9 @@ class SetUpProfileViewController: UIViewController {
                 
             case .success(let muser):
                 self.showAlert(with: "Успешно!", and: "Приятного общения!") {
-                    self.present(MainTabBarController(), animated: true)
+                    let mainTabBar = MainTabBarController(currentUser: muser)
+                    mainTabBar.modalPresentationStyle = .fullScreen
+                    self.present(mainTabBar, animated: true)
                 }
             case .failure(let error):
                 self.showAlert(with: "Ошибка", and: error.localizedDescription)
@@ -51,7 +54,13 @@ class SetUpProfileViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
         setUpConstraints()
+        setUpTextFieldDelegate()
         goToChatsButton.addAction(goToChatsButtonAction, for: .touchUpInside)
+        
+    }
+    private func setUpTextFieldDelegate() {
+        self.fullNametextField.delegate = self
+        self.aboutmetextField.delegate = self
         
     }
 }
@@ -89,6 +98,13 @@ extension SetUpProfileViewController {
         goToChatsButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -40)
        ])
     }
+}
+//MARK: - UITextField Delegate
+extension SetUpProfileViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+            self.view.endEditing(true)
+            return false
+        }
 }
 // MARK: - SwiftUI
 import SwiftUI

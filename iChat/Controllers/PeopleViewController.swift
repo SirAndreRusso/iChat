@@ -23,11 +23,19 @@ class PeopleViewController: UIViewController {
             
         }
     }
-
-
-override func viewDidLoad() {
+    private let currentUser: MUser
+    init(currentUser: MUser){
+        self.currentUser = currentUser
+        super.init(nibName: nil, bundle: nil)
+        //Отображаем имя пользователя в заголовке VC
+        title = currentUser.username
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    override func viewDidLoad() {
     super.viewDidLoad()
-    view.backgroundColor = .white
     setUpSearchBar()
     setUpCollectionView()
     createDataSource()

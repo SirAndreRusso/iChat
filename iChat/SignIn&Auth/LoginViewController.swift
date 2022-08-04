@@ -27,27 +27,54 @@ class LoginViewController: UIViewController {
     let passwordTextField = OneLineTextField(font: .avenir20())
     
     //Actions
+    lazy var googleButtonAction = UIAction { _ in
+        AuthService.shared.googleSignIn(presentVC: self) {(result) in
+            switch result {
+                
+            case .success(let user):
+                self.showAlert(with: "", and: "Вы успешно авторизованы") {
+                    FirestoreService.shared.getUserData(user: user) { (result) in
+                        switch result {
+                            
+                        case .success(let muser):
+                            let mainTabBar = MainTabBarController(currentUser: muser)
+                            mainTabBar.modalPresentationStyle = .fullScreen
+                            self.present(mainTabBar, animated: true)
+                            
+                        case .failure(let error):
+                            self.present(SetUpProfileViewController(currentUser: user), animated: true)
+                        }
+                    }
+                }
+            case .failure(let error):
+                self.showAlert(with: "Ошибка", and: error.localizedDescription)
+            }
+        }
+    }
     lazy var loginButtonAction = UIAction {_ in
         AuthService.shared.login(email: self.emailTextField.text!, password: self.passwordTextField.text!) { (result) in
             switch result {
                 
             case .success(let user):
                 self.showAlert(with: "", and: "Вы успешно авторизованы") {
-                FirestoreService.shared.getUserData(user: user) { (result) in
-                    switch result {
-                        
-                    case .success(let muser):
-                        self.present(MainTabBarController(), animated: true)
-                    case .failure(let error):
-                        self.present(SetUpProfileViewController(currentUser: user), animated: true)
+                    FirestoreService.shared.getUserData(user: user) { (result) in
+                        switch result {
+                            
+                        case .success(let muser):
+                            let mainTabBar = MainTabBarController(currentUser: muser)
+                            mainTabBar.modalPresentationStyle = .fullScreen
+                            self.present(mainTabBar, animated: true)
+                            
+                        case .failure(let error):
+                            self.present(SetUpProfileViewController(currentUser: user), animated: true)
+                        }
                     }
-                }
                 }
             case .failure(let error):
                 self.showAlert(with: "Ошибка!", and: error.localizedDescription)
             }
         }
-     }
+    }
     lazy var registrationButtonAction = UIAction{_ in
         self.dismiss(animated: true) {
             self.delegate?.toRegistrationVC()
@@ -61,6 +88,7 @@ class LoginViewController: UIViewController {
         setUpConstraints()
         loginButton.addAction(loginButtonAction, for: .touchUpInside)
         registrationButton.addAction(registrationButtonAction, for: .touchUpInside)
+        googleButton.addAction(googleButtonAction, for: .touchUpInside)
     }
 }
 // MARK: - Setup constraints
@@ -71,7 +99,7 @@ extension LoginViewController {
         let passwordStackView = UIStackView(arrangedSubviews: [passwordLabel, passwordTextField], axis: .vertical, spacing: 0)
         loginButton.heightAnchor.constraint(equalToConstant: 60).isActive = true
         let stackView = UIStackView(arrangedSubviews: [loginWithView, orLabel, emailStackView, passwordStackView, loginButton], axis: .vertical, spacing: 40)
-        registrationButton.contentHorizontalAlignment = .leading
+        registrationButton.contentHorizontalAlignment = .center
         let bottomStackView = UIStackView(arrangedSubviews: [needAnAccountLabel, registrationButton], axis: .horizontal, spacing: 10)
         bottomStackView.alignment = .firstBaseline
         welcomeLabel.translatesAutoresizingMaskIntoConstraints = false

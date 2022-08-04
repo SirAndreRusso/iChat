@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import GoogleSignIn
 
 class AuthViewController: UIViewController {
     
@@ -29,6 +30,21 @@ class AuthViewController: UIViewController {
     lazy var loginButtonAction = UIAction {_ in
         self.present(self.loginVC, animated: true, completion: nil)
      }
+    lazy var googleButtonAction = UIAction {_ in
+        
+        AuthService.shared.googleSignIn(presentVC: self) {(result) in
+                switch result {
+                    
+                case .success(let user):
+                    self.showAlert(with: "Успешно", and: "Теперь вы зарегистрированы в iChat") {
+                        self.present(SetUpProfileViewController(currentUser: user), animated: true)
+                    }
+                case .failure(let error):
+                    self.showAlert(with: "Ошибка", and: error.localizedDescription)
+                }
+        }
+    }
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,6 +55,7 @@ class AuthViewController: UIViewController {
         loginVC.delegate = self
         eMailbutton.addAction(emailButtonAction, for: .touchUpInside)
         loginButton.addAction(loginButtonAction, for: .touchUpInside)
+        googleButton.addAction(googleButtonAction, for: .touchUpInside)
     }
    
 }
@@ -77,6 +94,36 @@ extension AuthViewController: AuthNavigationDelegate {
     
     
 }
+//MARK: - Google Login
+//extension AuthViewController {
+//    func sign( error: Error!) {
+//
+//        AuthService.shared.googleLogin(completion: { (result) in
+//
+//            switch result {
+//
+//            case .success(let user):
+//                FirestoreService.shared.getUserData(user: user) { (result) in
+//                    switch result {
+//
+//                    case .success(let muser):
+//                        self.showAlert(with: "Успешно!", and: "Вы авторизованы")
+//                        let mainTabBar = MainTabBarController(currentUser: muser)
+//                        mainTabBar.modalPresentationStyle = .fullScreen
+//                        self.present(mainTabBar, animated: true)
+//                    case .failure(let error):
+//                        self.showAlert(with: "Успешно!", and: "Вы зарегистрированы") {
+//                            self.present(SetUpProfileViewController(currentUser: user), animated: true)
+//                        }
+//                    }
+//                }
+//            case .failure(let error):
+//                self.showAlert(with: "Ошибка", and: error.localizedDescription)
+//            }
+//        }
+//    }
+//
+//}
 // MARK: - SwiftUI
 import SwiftUI
 struct AuthViewControllerProvider: PreviewProvider {
