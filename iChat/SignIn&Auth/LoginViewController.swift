@@ -28,21 +28,22 @@ class LoginViewController: UIViewController {
     
     //Actions
     lazy var googleButtonAction = UIAction { _ in
-        AuthService.shared.googleSignIn(presentVC: self) {(result) in
+        AuthService.shared.googleSignIn(presentingViewController: self) {(result) in
             switch result {
                 
             case .success(let user):
-                self.showAlert(with: "", and: "Вы успешно авторизованы") {
+                UIApplication.getTopViewController()?.showAlert(with: "", and: "Вы успешно авторизованы") {
                     FirestoreService.shared.getUserData(user: user) { (result) in
                         switch result {
                             
                         case .success(let muser):
                             let mainTabBar = MainTabBarController(currentUser: muser)
                             mainTabBar.modalPresentationStyle = .fullScreen
-                            self.present(mainTabBar, animated: true)
+                            UIApplication.getTopViewController()?.present(mainTabBar, animated: true)
                             
                         case .failure(let error):
-                            self.present(SetUpProfileViewController(currentUser: user), animated: true)
+                            UIApplication.getTopViewController()?.showAlert(with: "Успешно!", and: "Вы зарегистрированы")
+                            UIApplication.getTopViewController()?.present(SetUpProfileViewController(currentUser: user), animated: true)
                         }
                     }
                 }

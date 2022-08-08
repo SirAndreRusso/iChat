@@ -50,12 +50,11 @@ class AuthService {
             completion(.success(result.user))
         }
     }
-    func googleSignIn(presentVC vc: UIViewController, completion: @escaping (Result<User, Error>)-> Void){
+    func googleSignIn(presentingViewController vc: UIViewController, completion: @escaping (Result<User, Error>)-> Void){
         guard let clientID = FirebaseApp.app()?.options.clientID else { return }
         let config = GIDConfiguration(clientID: clientID)
         let vc = vc
         GIDSignIn.sharedInstance.signIn(with: config, presenting: vc) {  (user, error) in
-            
             if let error = error {
                 completion(.failure(error))
                 return

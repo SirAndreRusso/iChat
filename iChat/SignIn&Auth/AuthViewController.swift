@@ -32,15 +32,15 @@ class AuthViewController: UIViewController {
      }
     lazy var googleButtonAction = UIAction {_ in
         
-        AuthService.shared.googleSignIn(presentVC: self) {(result) in
+        AuthService.shared.googleSignIn(presentingViewController: self) {(result) in
                 switch result {
                     
                 case .success(let user):
-                    self.showAlert(with: "Успешно", and: "Теперь вы зарегистрированы в iChat") {
+                    UIApplication.getTopViewController()?.showAlert(with: "Успешно", and: "Теперь вы зарегистрированы в iChat") {
                         self.present(SetUpProfileViewController(currentUser: user), animated: true)
                     }
                 case .failure(let error):
-                    self.showAlert(with: "Ошибка", and: error.localizedDescription)
+                    UIApplication.getTopViewController()?.showAlert(with: "Ошибка", and: error.localizedDescription)
                 }
         }
     }
