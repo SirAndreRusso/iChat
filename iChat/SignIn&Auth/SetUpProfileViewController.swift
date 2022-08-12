@@ -8,6 +8,7 @@
 import UIKit
 import FirebaseAuth
 import PhotosUI
+import SDWebImage
 
 
 class SetUpProfileViewController: UIViewController {
@@ -30,7 +31,9 @@ class SetUpProfileViewController: UIViewController {
         if let userName = currentUser.displayName {
             fullNametextField.text = userName
         }
-        //TODO: - set google image
+        if let photoURL = currentUser.photoURL {
+            fullImageView.circleImageView.sd_setImage(with: photoURL)
+        }
     }
     
     required init?(coder: NSCoder) {
@@ -55,29 +58,14 @@ class SetUpProfileViewController: UIViewController {
         }
     }
     lazy var plusButtonAction = UIAction { [weak self] (_) in
-        print("123")
         var configuration = PHPickerConfiguration()
         configuration.selectionLimit = 1
         configuration.filter = .images
         let picker = PHPickerViewController(configuration: configuration)
         picker.delegate = self
-        print("123")
         UIApplication.getTopViewController()?.present(picker, animated: true)
-        print("321")
     }
     
-    
-//    @objc private func plusButtonAction(){
-////        var configuration = PHPickerConfiguration()
-////                configuration.selectionLimit = 1
-////                configuration.filter = .images
-////                let picker = PHPickerViewController(configuration: configuration)
-////                picker.delegate = self
-////                print("123")
-////                self.present(picker, animated: true)
-////                print("321")
-//        self.showAlert(with: "2323", and: "23423")
-//    }
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white

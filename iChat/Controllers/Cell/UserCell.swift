@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import SDWebImage
+
 class UserCell: UICollectionViewCell, SelfConfiguringCell {
     let userImageView = UIImageView()
     let userName = UILabel(text: "text", font: .laoSangamMN20())
@@ -30,9 +32,24 @@ class UserCell: UICollectionViewCell, SelfConfiguringCell {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    // Метод, устанавливающий аватарки на nil при переиспользовании яйчеек
+    override func prepareForReuse() {
+        userImageView.image = nil
+    }
     func configure<U>(with value: U) where U : Hashable {
         guard let user: MUser = value as? MUser else {return}
-        userImageView.image = UIImage(named: user.avatarStringURL)
+        // Если в Cloud FireStore нет загруженной картинки, поставить дефолтную
+        if  user.avatarStringURL.self == "NotExist" {
+            userImageView.image = UIImage(named: "Avatar-placeholder")
+        } else if let url = URL(string: user.avatarStringURL){
+            // Если есть загруженная картинка, с помощью библиотеки SDWebImage загружаем картинку по урлу
+            userImageView.sd_setImage(with: url)
+        } else {
+            return
+        }
+        
+        
+        //        userImageView.image = UIImage(named: user.avatarStringURL)
         userName.text = user.username
     }
     private func setupConstraints() {
@@ -62,7 +79,7 @@ class UserCell: UICollectionViewCell, SelfConfiguringCell {
             userName.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
             
         ])
-       
+        
     }
     
     
