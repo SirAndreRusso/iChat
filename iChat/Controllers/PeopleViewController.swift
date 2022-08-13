@@ -79,6 +79,7 @@ class PeopleViewController: UIViewController {
         
         collectionView.register(SectionHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: SectionHeader.reuseID)
         collectionView.register(UserCell.self, forCellWithReuseIdentifier: UserCell.reuseId)
+        collectionView.delegate = self
     }
 private func setUpSearchBar() {
     navigationController?.navigationBar.barTintColor = .mainWhite()
@@ -124,24 +125,7 @@ extension PeopleViewController {
                 }
     }
 }
-// MARK: - SwiftUI
-import SwiftUI
-struct PeopleViewControllerProvider: PreviewProvider {
-    static var previews: some View {
-        ContainerView().edgesIgnoringSafeArea(.all)
-    }
-    struct ContainerView: UIViewControllerRepresentable {
-        let tabBarVC = MainTabBarController()
-        func makeUIViewController(context: UIViewControllerRepresentableContext<PeopleViewControllerProvider.ContainerView>) -> some MainTabBarController {
-            return tabBarVC
-        }
-        func updateUIViewController(_ uiViewController: PeopleViewControllerProvider.ContainerView.UIViewControllerType, context: UIViewControllerRepresentableContext<PeopleViewControllerProvider.ContainerView>) {
-            
-        }
-    }
-    
-    
-}
+
 // MARK: - Setup Layout
 extension PeopleViewController {
 private func createCompositionalLayout() -> UICollectionViewLayout {
@@ -187,4 +171,31 @@ extension PeopleViewController: UISearchBarDelegate {
        reloadData(with: searchText)
     }
 }
+// MARK: - CollectionViewDelegate
+extension PeopleViewController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard let user = self.dataSource.itemIdentifier(for: indexPath)
+        else { return }
+        let profileVC = ProfileViewController(user: user)
+        present(profileVC, animated: true)
+    }
+}
 
+// MARK: - SwiftUI
+import SwiftUI
+struct PeopleViewControllerProvider: PreviewProvider {
+    static var previews: some View {
+        ContainerView().edgesIgnoringSafeArea(.all)
+    }
+    struct ContainerView: UIViewControllerRepresentable {
+        let tabBarVC = MainTabBarController()
+        func makeUIViewController(context: UIViewControllerRepresentableContext<PeopleViewControllerProvider.ContainerView>) -> some MainTabBarController {
+            return tabBarVC
+        }
+        func updateUIViewController(_ uiViewController: PeopleViewControllerProvider.ContainerView.UIViewControllerType, context: UIViewControllerRepresentableContext<PeopleViewControllerProvider.ContainerView>) {
+            
+        }
+    }
+    
+    
+}
