@@ -6,16 +6,18 @@
 //
 
 import UIKit
+
 class ListViewController: UIViewController {
+    private let currentUser: MUser
     var activeChats = [MChat]()
     var waitingChats = [MChat]()
     var collectionView: UICollectionView!
+    var dataSource: UICollectionViewDiffableDataSource<Section, MChat>?
     enum Section: Int, CaseIterable{
         case waitingChats
         case activeChats
         func description() -> String {
             switch self {
-                
             case .waitingChats:
                 return "Waiting chats"
             case .activeChats:
@@ -23,18 +25,21 @@ class ListViewController: UIViewController {
             }
         }
     }
-    var dataSource: UICollectionViewDiffableDataSource<Section, MChat>?
-    private let currentUser: MUser
+    
+// MARK: - currentUser init
+    
     init(currentUser: MUser){
         self.currentUser = currentUser
         super.init(nibName: nil, bundle: nil)
         //Отображаем имя пользователя в заголовке VC
         title = currentUser.username
     }
-    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+// MARK: - viewDidLoad()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpCollectionView()
@@ -42,6 +47,9 @@ class ListViewController: UIViewController {
         createDataSourсe()
         reloadData()
     }
+    
+// MARK: - Setup Layout
+    
     private func setUpCollectionView(){
         collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: createCompositionalLayout())
         collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
@@ -70,40 +78,45 @@ class ListViewController: UIViewController {
         searchController.obscuresBackgroundDuringPresentation = false
         searchController.searchBar.delegate = self
     }
-   
-}
-//MARK: - DataSource
-extension ListViewController {
     
+}
+
+// MARK: - DataSource
+
+extension ListViewController {
     private func createDataSourсe() {
-        dataSource = UICollectionViewDiffableDataSource<Section, MChat>(collectionView: collectionView, cellProvider: { (collectionView, indexPath, chat) -> UICollectionViewCell? in
+        dataSource = UICollectionViewDiffableDataSource<Section, MChat>(collectionView: collectionView, cellProvider: { [weak self] (collectionView, indexPath, chat) -> UICollectionViewCell? in
+            guard let self = self else {return nil}
             guard let section = Section(rawValue: indexPath.section) else {
                 fatalError("Unknown section")
             }
             switch section {
             case .activeChats:
                 return self.configure(collectionView: collectionView, cellType: ActiveChatCell.self, with: chat, for: indexPath)
-
+                
             case .waitingChats:
                 return self.configure(collectionView: collectionView, cellType: WaitingChatCell.self, with: chat, for: indexPath)
-
+                
             }
         })
         dataSource?.supplementaryViewProvider = {
             collectionView, kind, indexPath in
             guard let sectionHeader = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: SectionHeader.reuseID, for: indexPath) as? SectionHeader
             else {fatalError("Can not create new section header")}
-                guard let section = Section(rawValue: indexPath.section)
-                else {fatalError("Unknown section kind")}
+            guard let section = Section(rawValue: indexPath.section)
+            else {fatalError("Unknown section kind")}
             sectionHeader.configure(text: section.description(), font: .laoSangamMN20(), textColor: .sectionHeaderColor())
-                 return sectionHeader
-                }
-            }
+            return sectionHeader
+        }
+    }
 }
-//MARK: - SetUp layout
+
+// MARK: - SetUp layout
+
 extension ListViewController {
     private func createCompositionalLayout() -> UICollectionViewLayout {
-        let layout = UICollectionViewCompositionalLayout { (sectionIndex, layoutEnvironment) -> NSCollectionLayoutSection? in
+        let layout = UICollectionViewCompositionalLayout { [weak self] (sectionIndex, layoutEnvironment) -> NSCollectionLayoutSection? in
+            guard let self = self else {return nil}
             guard let section = Section(rawValue: sectionIndex) else {
                 fatalError("Unknown section")
             }
@@ -117,8 +130,9 @@ extension ListViewController {
         let config = UICollectionViewCompositionalLayoutConfiguration()
         config.interSectionSpacing = 20
         layout.configuration = config
-            return layout
-        }
+        return layout
+    }
+    
     private func createWaitingChats()-> NSCollectionLayoutSection {
         let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1))
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
@@ -173,9 +187,6 @@ struct ListViewControllerProvider: PreviewProvider {
             return tabBarVC
         }
         func updateUIViewController(_ uiViewController: ListViewControllerProvider.ContainerView.UIViewControllerType, context: UIViewControllerRepresentableContext<ListViewControllerProvider.ContainerView>) {
-            
         }
     }
-    
-    
 }

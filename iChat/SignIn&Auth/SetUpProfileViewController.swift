@@ -10,9 +10,7 @@ import FirebaseAuth
 import PhotosUI
 import SDWebImage
 
-
 class SetUpProfileViewController: UIViewController {
-    
     let welcomeLabel = UILabel(text: "Set up Profile!", font: .avenir26())
     let fullImageView = AddPhotoView()
     let fullNameLabel = UILabel(text: "Full name")
@@ -25,7 +23,6 @@ class SetUpProfileViewController: UIViewController {
     let goToChatsButton = UIButton(title: "Go to chats!", titleColor: .white, backGroundColor: .buttonDark(),  isShadow: true, cornerRadius: 4)
     private let currentUser: User
     init(currentUser: User) {
-        
         self.currentUser = currentUser
         super.init(nibName: nil, bundle: nil)
         if let userName = currentUser.displayName {
@@ -35,53 +32,59 @@ class SetUpProfileViewController: UIViewController {
             fullImageView.circleImageView.sd_setImage(with: photoURL)
         }
     }
-    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-   
     
-    //Actions
-    lazy var goToChatsButtonAction = UIAction { _ in
-        FirestoreService.shared.saveProfileWith(id: self.currentUser.uid, email: self.currentUser.email!, username: self.fullNametextField.text, avatarImage: self.fullImageView.circleImageView.image, description: self.aboutmetextField.text, gender: self.genderSegmentedControl.titleForSegment(at: self.genderSegmentedControl.selectedSegmentIndex)) { (result) in
-            switch result {
-                
-            case .success(let muser):
-                self.showAlert(with: "Успешно!", and: "Приятного общения!") {
-                    let mainTabBar = MainTabBarController(currentUser: muser)
-                    mainTabBar.modalPresentationStyle = .fullScreen
-                    self.present(mainTabBar, animated: true)
-                }
-            case .failure(let error):
-                self.showAlert(with: "Ошибка", and: error.localizedDescription)
-            }
-        }
-    }
-    lazy var plusButtonAction = UIAction { [weak self] (_) in
-        var configuration = PHPickerConfiguration()
-        configuration.selectionLimit = 1
-        configuration.filter = .images
-        let picker = PHPickerViewController(configuration: configuration)
-        picker.delegate = self
-        UIApplication.getTopViewController()?.present(picker, animated: true)
-    }
+// MARK: - viewDidLoad()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
         setUpConstraints()
         setUpTextFieldDelegate()
-        goToChatsButton.addAction(goToChatsButtonAction, for: .touchUpInside)
-        fullImageView.plusButton.addAction(plusButtonAction, for: .touchUpInside)
-        
     }
     private func setUpTextFieldDelegate() {
         self.fullNametextField.delegate = self
         self.aboutmetextField.delegate = self
-        
+    }
+}
+
+// MARK: - setUpButtonsActions
+
+extension SetUpProfileViewController {
+    private func setUpButtonsActions() {
+        let goToChatsButtonAction = UIAction { [weak self] _ in
+            guard let self = self else {return}
+            FirestoreService.shared.saveProfileWith(id: self.currentUser.uid, email: self.currentUser.email!, username: self.fullNametextField.text, avatarImage: self.fullImageView.circleImageView.image, description: self.aboutmetextField.text, gender: self.genderSegmentedControl.titleForSegment(at: self.genderSegmentedControl.selectedSegmentIndex)) { (result) in
+                switch result {
+                    
+                case .success(let muser):
+                    self.showAlert(with: "Успешно!", and: "Приятного общения!") {
+                        let mainTabBar = MainTabBarController(currentUser: muser)
+                        mainTabBar.modalPresentationStyle = .fullScreen
+                        self.present(mainTabBar, animated: true)
+                    }
+                case .failure(let error):
+                    self.showAlert(with: "Ошибка", and: error.localizedDescription)
+                }
+            }
+        }
+        let plusButtonAction = UIAction { [weak self] (_) in
+            guard let self = self else {return}
+            var configuration = PHPickerConfiguration()
+            configuration.selectionLimit = 1
+            configuration.filter = .images
+            let picker = PHPickerViewController(configuration: configuration)
+            picker.delegate = self
+            UIApplication.getTopViewController()?.present(picker, animated: true)
+        }
+        goToChatsButton.addAction(goToChatsButtonAction, for: .touchUpInside)
+        fullImageView.plusButton.addAction(plusButtonAction, for: .touchUpInside)
     }
 }
 // MARK: - Setup constraints
+
 extension SetUpProfileViewController {
     private func setUpConstraints() {
         let fullNameStackView = UIStackView(arrangedSubviews: [fullNameLabel, fullNametextField], axis: .vertical, spacing: 0)
@@ -117,6 +120,7 @@ extension SetUpProfileViewController {
     }
 }
 //MARK: - UITextField Delegate
+
 extension SetUpProfileViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         self.view.endEditing(true)
@@ -124,36 +128,38 @@ extension SetUpProfileViewController: UITextFieldDelegate {
     }
 }
 //MARK: - PHPickerViewController Delegate
+
 extension SetUpProfileViewController: PHPickerViewControllerDelegate {
     func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
         dismiss(animated: true, completion: nil)
-                guard !results.isEmpty else { return }
+        guard !results.isEmpty else { return }
         for result in results {
-                let provider = result.itemProvider
-
-                if provider.canLoadObject(ofClass: UIImage.self) {
-                     provider.loadObject(ofClass: UIImage.self) { (image, error) in
-                         DispatchQueue.main.async {
-                             if let image = image as? UIImage {
-                                 self.fullImageView.circleImageView.image = image
-                                 StorageService.shared.uploadImage(photo: image) { (result) in
-                                     switch result{
-                                         
-                                     case .success(_):
-                                         return
-                                     case .failure(let error):
-                                         UIApplication.getTopViewController()?.showAlert(with: "Oops", and: "\(error)")
-                                     }
-                                 }
-                             }
-                         }
+            let provider = result.itemProvider
+            
+            if provider.canLoadObject(ofClass: UIImage.self) {
+                provider.loadObject(ofClass: UIImage.self) { (image, error) in
+                    DispatchQueue.main.async {
+                        if let image = image as? UIImage {
+                            self.fullImageView.circleImageView.image = image
+                            StorageService.shared.uploadImage(photo: image) { (result) in
+                                switch result{
+                                    
+                                case .success(_):
+                                    return
+                                case .failure(let error):
+                                    UIApplication.getTopViewController()?.showAlert(with: "Oops", and: "\(error)")
+                                }
+                            }
+                        }
                     }
-                 }
+                }
             }
+        }
     }
 }
 
 // MARK: - SwiftUI
+
 import SwiftUI
 struct SetUpProfileViewControllerProvider: PreviewProvider {
     static var previews: some View {
@@ -165,7 +171,6 @@ struct SetUpProfileViewControllerProvider: PreviewProvider {
             return setUpProfileViewController
         }
         func updateUIViewController(_ uiViewController: UIViewControllerType, context: Context) {
-            
         }
     }
 }

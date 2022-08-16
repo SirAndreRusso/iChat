@@ -9,28 +9,37 @@ import SDWebImage
 
 class ProfileViewController: UIViewController {
     private let user: MUser
-    init(user: MUser) {
-        self.user = user
-        self.nameLabel.text = user.username
-        self.aboutMeLabel.text = user.description
-        self.imageView.sd_setImage(with: URL(string: user.avatarStringURL))
-        super.init(nibName: nil, bundle: nil)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
     let containerView = UIView()
     let imageView = UIImageView(image: UIImage(named: "Human1"), contentMode: .scaleAspectFill)
     let nameLabel = UILabel(text: "Peter Pen", font: .systemFont(ofSize: 20, weight: .light))
     let aboutMeLabel = UILabel(text: "Chat with me", font: .systemFont(ofSize: 16, weight: .light))
     let myTextField = InsertableTextField()
+    
+// MARK: - user init
+    
+        init(user: MUser) {
+            self.user = user
+            self.nameLabel.text = user.username
+            self.aboutMeLabel.text = user.description
+            self.imageView.sd_setImage(with: URL(string: user.avatarStringURL))
+            super.init(nibName: nil, bundle: nil)
+        }
+        
+        required init?(coder: NSCoder) {
+            fatalError("init(coder:) has not been implemented")
+        }
+    
+// MARK: - viewDidLoad()
+    
     override func viewDidLoad() {
         super .viewDidLoad()
         customizeElements()
         setupConstraints()
         view.backgroundColor = .white
     }
+    
+// MARK: - customizeElements
+    
     private func customizeElements() {
         containerView.translatesAutoresizingMaskIntoConstraints = false
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -61,7 +70,9 @@ class ProfileViewController: UIViewController {
         }
     }
 }
+
 // MARK: - Setup constraints
+
 extension ProfileViewController {
     
     private func setupConstraints() {

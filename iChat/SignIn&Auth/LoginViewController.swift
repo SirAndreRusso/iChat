@@ -8,6 +8,7 @@
 import UIKit
 
 class LoginViewController: UIViewController {
+    weak var delegate: AuthNavigationDelegate?
     let welcomeLabel = UILabel(text: "Welcome back")
     let loginWithlabel = UILabel(text: "Login with")
     let orLabel = UILabel(text: "Or")
@@ -26,73 +27,85 @@ class LoginViewController: UIViewController {
     let emailTextField = OneLineTextField(font: .avenir20())
     let passwordTextField = OneLineTextField(font: .avenir20())
     
-    //Actions
-    lazy var googleButtonAction = UIAction { _ in
-        AuthService.shared.googleSignIn(presentingViewController: self) {(result) in
-            switch result {
-                
-            case .success(let user):
-                UIApplication.getTopViewController()?.showAlert(with: "", and: "Вы успешно авторизованы") {
-                    FirestoreService.shared.getUserData(user: user) { (result) in
-                        switch result {
-                            
-                        case .success(let muser):
-                            let mainTabBar = MainTabBarController(currentUser: muser)
-                            mainTabBar.modalPresentationStyle = .fullScreen
-                            UIApplication.getTopViewController()?.present(mainTabBar, animated: true)
-                            
-                        case .failure(let error):
-                            UIApplication.getTopViewController()?.showAlert(with: "Успешно!", and: "Вы зарегистрированы")
-                            UIApplication.getTopViewController()?.present(SetUpProfileViewController(currentUser: user), animated: true)
-                        }
-                    }
-                }
-            case .failure(let error):
-                self.showAlert(with: "Ошибка", and: error.localizedDescription)
-            }
-        }
-    }
-    lazy var loginButtonAction = UIAction {_ in
-        AuthService.shared.login(email: self.emailTextField.text!, password: self.passwordTextField.text!) { (result) in
-            switch result {
-                
-            case .success(let user):
-                self.showAlert(with: "", and: "Вы успешно авторизованы") {
-                    FirestoreService.shared.getUserData(user: user) { (result) in
-                        switch result {
-                            
-                        case .success(let muser):
-                            let mainTabBar = MainTabBarController(currentUser: muser)
-                            mainTabBar.modalPresentationStyle = .fullScreen
-                            self.present(mainTabBar, animated: true)
-                            
-                        case .failure(let error):
-                            self.present(SetUpProfileViewController(currentUser: user), animated: true)
-                        }
-                    }
-                }
-            case .failure(let error):
-                self.showAlert(with: "Ошибка!", and: error.localizedDescription)
-            }
-        }
-    }
-    lazy var registrationButtonAction = UIAction{_ in
-        self.dismiss(animated: true) {
-            self.delegate?.toRegistrationVC()
-        }
-    }
-    weak var delegate: AuthNavigationDelegate?
+// MARK: - viewDidLoad()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         googleButton.customiedGoogleButton()
         view.backgroundColor = .white
         setUpConstraints()
-        loginButton.addAction(loginButtonAction, for: .touchUpInside)
-        registrationButton.addAction(registrationButtonAction, for: .touchUpInside)
-        googleButton.addAction(googleButtonAction, for: .touchUpInside)
+        setUpButtonsActions()
+        
     }
 }
+// MARK: - setUpButtons Actions
+
+extension LoginViewController {
+     private func setUpButtonsActions() {
+         let googleButtonAction = UIAction { [weak self] _ in
+             guard let self = self else {return}
+             AuthService.shared.googleSignIn(presentingViewController: self) {(result) in
+                 switch result {
+                     
+                 case .success(let user):
+                     UIApplication.getTopViewController()?.showAlert(with: "", and: "Вы успешно авторизованы") {
+                         FirestoreService.shared.getUserData(user: user) { (result) in
+                             switch result {
+                                 
+                             case .success(let muser):
+                                 let mainTabBar = MainTabBarController(currentUser: muser)
+                                 mainTabBar.modalPresentationStyle = .fullScreen
+                                 UIApplication.getTopViewController()?.present(mainTabBar, animated: true)
+                                 
+                             case .failure(_):
+                                 UIApplication.getTopViewController()?.showAlert(with: "Успешно!", and: "Вы зарегистрированы")
+                                 UIApplication.getTopViewController()?.present(SetUpProfileViewController(currentUser: user), animated: true)
+                             }
+                         }
+                     }
+                 case .failure(let error):
+                     self.showAlert(with: "Ошибка", and: error.localizedDescription)
+                 }
+             }
+         }
+         let loginButtonAction = UIAction {[weak self] _ in
+             guard let self = self else {return}
+             AuthService.shared.login(email: self.emailTextField.text!, password: self.passwordTextField.text!) { (result) in
+                 switch result {
+                     
+                 case .success(let user):
+                     self.showAlert(with: "", and: "Вы успешно авторизованы") {
+                         FirestoreService.shared.getUserData(user: user) { (result) in
+                             switch result {
+                                 
+                             case .success(let muser):
+                                 let mainTabBar = MainTabBarController(currentUser: muser)
+                                 mainTabBar.modalPresentationStyle = .fullScreen
+                                 self.present(mainTabBar, animated: true)
+                                 
+                             case .failure(_):
+                                 self.present(SetUpProfileViewController(currentUser: user), animated: true)
+                             }
+                         }
+                     }
+                 case .failure(let error):
+                     self.showAlert(with: "Ошибка!", and: error.localizedDescription)
+                 }
+             }
+         }
+         let registrationButtonAction = UIAction{[weak self] _ in
+             guard let self = self else {return}
+             self.dismiss(animated: true) {
+                 self.delegate?.toRegistrationVC()
+             }
+         }
+         loginButton.addAction(loginButtonAction, for: .touchUpInside)
+         registrationButton.addAction(registrationButtonAction, for: .touchUpInside)
+         googleButton.addAction(googleButtonAction, for: .touchUpInside)
+     }
+}
 // MARK: - Setup constraints
+
 extension LoginViewController {
     private func setUpConstraints (){
         let loginWithView = ButtonFormView(label: loginWithlabel, button: googleButton)
@@ -127,7 +140,9 @@ extension LoginViewController {
         ])
     }
 }
+
 // MARK: - SwiftUI
+
 import SwiftUI
 struct LoginVCProvider: PreviewProvider {
     static var previews: some View {
@@ -139,7 +154,6 @@ struct LoginVCProvider: PreviewProvider {
             return loginViewController
         }
         func updateUIViewController(_ uiViewController: UIViewControllerType, context: Context) {
-            
         }
     }
 }

@@ -19,9 +19,10 @@ class ChatRequestViewController: UIViewController {
         view.backgroundColor = .mainWhite()
         customizeElements()
         setupConstraints()
-        
     }
-
+    
+    // MARK: - customizeElements
+    
     private func customizeElements() {
         containerView.translatesAutoresizingMaskIntoConstraints = false
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -44,11 +45,11 @@ class ChatRequestViewController: UIViewController {
         self.acceptButton.applyGradients(cornerRadius: 10)
     }
 }
+
 // MARK: - Setup constraints
+
 extension ChatRequestViewController {
-    
     private func setupConstraints() {
-        
         view.addSubview(imageView)
         view.addSubview(containerView)
         containerView.addSubview(nameLabel)
@@ -83,27 +84,25 @@ extension ChatRequestViewController {
             buttonStackView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 24),
             buttonStackView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -24),
             buttonStackView.heightAnchor.constraint(equalToConstant: 56)
-            
-            
-            
         ])
     }
 }
+
 // MARK: - SwiftUI
+
 import SwiftUI
+
 struct ChatrequestVCProvider: PreviewProvider {
     static var previews: some View {
         ContainerView().edgesIgnoringSafeArea(.all)
     }
+    
     struct ContainerView: UIViewControllerRepresentable {
         let chatRequestVC = ChatRequestViewController()
         func makeUIViewController(context: UIViewControllerRepresentableContext<ChatrequestVCProvider.ContainerView>) -> some ChatRequestViewController {
             return chatRequestVC
         }
         func updateUIViewController(_ uiViewController: ChatrequestVCProvider.ContainerView.UIViewControllerType, context: UIViewControllerRepresentableContext<ChatrequestVCProvider.ContainerView>) {
-            
         }
     }
-    
-    
 }
