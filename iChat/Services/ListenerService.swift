@@ -8,6 +8,7 @@
 import FirebaseCore
 import FirebaseAuth
 import FirebaseFirestore
+import SwiftUI
 
 class ListenerService {
     static let shared = ListenerService()
@@ -28,7 +29,6 @@ class ListenerService {
             snapShot.documentChanges.forEach { difference in
                 guard let muser = MUser(document: difference.document) else {return}
                 switch difference.type {
-                    
                 case .added:
                     guard !users.contains(muser) else {return}
                     guard muser.id != self.currentUserId else {return}
@@ -45,5 +45,31 @@ class ListenerService {
             completion(.success(users))
         }
             return usersListener
+    }
+    func waitingChatsObserve(chats: [MChat], completion: @escaping (Result<[MChat], Error>) -> Void) -> ListenerRegistration? {
+        var chats = chats
+        let chatsRef = db.collection(["users", currentUserId, "waitingChats"].joined(separator: "/"))
+        let chatListener = chatsRef.addSnapshotListener { quarySnapShot, error in
+            guard let snapShot = quarySnapShot else {
+                completion(.failure(error!))
+                return
+            }
+            snapShot.documentChanges.forEach { difference in
+                guard let chat = MChat(document: difference.document) else {return}
+                switch difference.type {
+                case .added:
+                    guard !chats.contains(chat) else {return}
+                    chats.append(chat)
+                case .modified:
+                    guard let index = chats.firstIndex(of: chat) else {return}
+                    chats[index] = chat
+                case .removed:
+                    guard let index = chats.firstIndex(of: chat) else {return}
+                    chats.remove(at: index)
+                }
+            }
+            completion(.success(chats))
+        }
+        return chatListener
     }
 }

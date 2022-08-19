@@ -47,14 +47,27 @@ extension AuthViewController {
         let googleButtonAction = UIAction {[weak self] _ in
             guard let self = self else {return}
             AuthService.shared.googleSignIn(presentingViewController: self) {(result) in
+                
                 switch result {
                     
                 case .success(let user):
-                    UIApplication.getTopViewController()?.showAlert(with: "Успешно", and: "Теперь вы зарегистрированы в iChat") {
-                        self.present(SetUpProfileViewController(currentUser: user), animated: true)
+                    FirestoreService.shared.getUserData(user: user) { result in
+                        switch result {
+                            
+                        case .success(let muser):
+                            UIApplication.getTopViewController()?.showAlert(with: "Вы уже зарегистрированы!", and: "Хотите продолжить как \(muser.username)?", completion: {
+                                let mainTabBar = MainTabBarController(currentUser: muser)
+                                mainTabBar.modalPresentationStyle = .fullScreen
+                                self.present(mainTabBar, animated: true)
+                            })
+                        case .failure(_):
+                            self.showAlert(with: "Успешно", and: "Теперь вы зарегистрированы в iChat") {
+                                self.present(SetUpProfileViewController(currentUser: user), animated: true)
+                            }
+                        }
                     }
                 case .failure(let error):
-                    UIApplication.getTopViewController()?.showAlert(with: "Ошибка", and: error.localizedDescription)
+                    self.showAlert(with: "Ошибка", and: error.localizedDescription)
                 }
             }
         }

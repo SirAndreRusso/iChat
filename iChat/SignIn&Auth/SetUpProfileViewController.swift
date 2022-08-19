@@ -43,10 +43,13 @@ class SetUpProfileViewController: UIViewController {
         view.backgroundColor = .white
         setUpConstraints()
         setUpTextFieldDelegate()
+        setUpButtonsActions()
     }
     private func setUpTextFieldDelegate() {
-        self.fullNametextField.delegate = self
-        self.aboutmetextField.delegate = self
+        fullNametextField.delegate = self
+        aboutmetextField.delegate = self
+        fullNametextField.returnKeyType = .next
+        aboutmetextField.returnKeyType = .go
     }
 }
 
@@ -123,8 +126,15 @@ extension SetUpProfileViewController {
 
 extension SetUpProfileViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        self.view.endEditing(true)
-        return false
+        switch textField {
+        case fullNametextField:
+            aboutmetextField.becomeFirstResponder()
+        case aboutmetextField:
+            aboutmetextField.resignFirstResponder()
+        default:
+            break
+        }
+        return true
     }
 }
 //MARK: - PHPickerViewController Delegate
@@ -140,7 +150,7 @@ extension SetUpProfileViewController: PHPickerViewControllerDelegate {
                 provider.loadObject(ofClass: UIImage.self) { (image, error) in
                     DispatchQueue.main.async {
                         if let image = image as? UIImage {
-                            self.fullImageView.circleImageView.image = image
+                            self.fullImageView.circleImageView.image = image.scaledToSafeUploadSize
                             StorageService.shared.uploadImage(photo: image) { (result) in
                                 switch result{
                                     

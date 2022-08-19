@@ -69,7 +69,15 @@ class ProfileViewController: UIViewController {
             }
         }
     }
+    
+    // MARK: - textFieldSetUp
+
+    private func textFieldSetUp() {
+        myTextField.delegate = self
+        myTextField.returnKeyType = .go
+    }
 }
+
 
 // MARK: - Setup constraints
 
@@ -108,6 +116,12 @@ extension ProfileViewController {
             myTextField.heightAnchor.constraint(equalToConstant: 45)
             
         ])
+    }
+}
+extension ProfileViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
     }
 }
 // MARK: - SwiftUI

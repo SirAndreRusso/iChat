@@ -71,6 +71,7 @@ class AuthService {
                                                            accessToken: authentication.accessToken)
             Auth.auth().signIn(with: credential) { (result, error) in
                 guard let result = result else {
+                    print("No result")
                     completion(.failure(error!))
                     return
                 }

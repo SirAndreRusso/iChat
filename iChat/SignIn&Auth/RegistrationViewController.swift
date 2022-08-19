@@ -32,6 +32,18 @@ class RegistrationViewController: UIViewController {
         super.viewDidLoad()
         setUpConstraints()
         setUpButtonsActions()
+        setUpTextFields()
+    }
+    
+    // MARK: - setUpTextFields
+
+    private func setUpTextFields() {
+        emailTextField.delegate = self
+        passwordTextField.delegate = self
+        confirmPasswordTextField.delegate = self
+        emailTextField.returnKeyType = .next
+        passwordTextField.returnKeyType = .next
+        confirmPasswordTextField.returnKeyType = .go
     }
 }
 
@@ -97,16 +109,20 @@ extension RegistrationViewController {
     }
 }
 
-// MARK: - showAlert Function
-
-extension UIViewController {
-    func showAlert(with title: String, and message: String, completion: @escaping () -> Void = {}) {
-        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        let okAction = UIAlertAction(title: "OK", style: .default) {(_) in
-            completion()
+// MARK: - UITextFieldDelegate
+extension RegistrationViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        switch textField {
+        case emailTextField:
+            passwordTextField.becomeFirstResponder()
+        case passwordTextField:
+            confirmPasswordTextField.becomeFirstResponder()
+        case confirmPasswordTextField:
+            confirmPasswordTextField.resignFirstResponder()
+        default:
+            break
         }
-        alertController.addAction(okAction)
-        present(alertController, animated: true)
+        return true
     }
 }
 

@@ -15,12 +15,11 @@ class WaitingChatCell: UICollectionViewCell, SelfConfiguringCell {
 //    }
     func configure<U>(with value: U) where U : Hashable {
         guard let waitingChat: MChat = value as? MChat else {return}
-        friendImageView.image = UIImage(named: waitingChat.friendAvatarStringURL)
+        friendImageView.sd_setImage(with: URL(string: waitingChat.friendAvatarStringURL), completed: nil)
     }
     override init(frame: CGRect) {
         super.init(frame: frame)
         setUpConstraints()
-        backgroundColor = .white
         self.layer.cornerRadius = 4
         self.clipsToBounds = true
     }

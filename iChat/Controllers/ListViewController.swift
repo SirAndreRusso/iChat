@@ -6,9 +6,11 @@
 //
 
 import UIKit
+import FirebaseFirestore
 
 class ListViewController: UIViewController {
     private let currentUser: MUser
+    private var waitingThatListener: ListenerRegistration?
     var activeChats = [MChat]()
     var waitingChats = [MChat]()
     var collectionView: UICollectionView!
@@ -26,7 +28,7 @@ class ListViewController: UIViewController {
         }
     }
     
-// MARK: - currentUser init
+// MARK: - currentUser init, waitingChatListener deinit
     
     init(currentUser: MUser){
         self.currentUser = currentUser
@@ -37,15 +39,32 @@ class ListViewController: UIViewController {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+    deinit {
+        waitingThatListener?.remove()
+    }
 // MARK: - viewDidLoad()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpCollectionView()
         setUpSearchBar()
-        createDataSourсe()
+        createDataSource()
         reloadData()
+        waitingThatListener = ListenerService.shared.waitingChatsObserve(chats: waitingChats, completion: { result in
+            switch result {
+            case .success(let waitingChats):
+// TODO: - Сделать изначальную загрузку чатов из памяти устройства, и сравнивать этот массив с массивом из файрбейс, в случае отличий, показывать чатреквест вьюконтроллер
+                if self.waitingChats != [], self.waitingChats.count <= waitingChats.count {
+                    let chatRequestVC = ChatRequestViewController(chat: waitingChats.last!)
+                    chatRequestVC.delegate = self
+                    self.present(chatRequestVC, animated: true)
+                }
+                self.waitingChats = waitingChats
+                self.reloadData()
+            case .failure(let error):
+                self.showAlert(with: "Ошибка!", and: error.localizedDescription)
+            }
+        })
     }
     
 // MARK: - Setup Layout
@@ -60,6 +79,7 @@ class ListViewController: UIViewController {
         collectionView.register(WaitingChatCell.self, forCellWithReuseIdentifier: WaitingChatCell.reuseId)
         
         collectionView.register(SectionHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: SectionHeader.reuseID)
+        collectionView.delegate = self
     }
     private func reloadData() {
         var snapShop = NSDiffableDataSourceSnapshot<Section, MChat>()
@@ -84,21 +104,20 @@ class ListViewController: UIViewController {
 // MARK: - DataSource
 
 extension ListViewController {
-    private func createDataSourсe() {
-        dataSource = UICollectionViewDiffableDataSource<Section, MChat>(collectionView: collectionView, cellProvider: { [weak self] (collectionView, indexPath, chat) -> UICollectionViewCell? in
-            guard let self = self else {return nil}
-            guard let section = Section(rawValue: indexPath.section) else {
-                fatalError("Unknown section")
-            }
-            switch section {
-            case .activeChats:
-                return self.configure(collectionView: collectionView, cellType: ActiveChatCell.self, with: chat, for: indexPath)
+    private func createDataSource() {
+            dataSource = UICollectionViewDiffableDataSource<Section, MChat>(collectionView: collectionView, cellProvider: { (collectionView, indexPath, chat) -> UICollectionViewCell? in
+                guard let section = Section(rawValue: indexPath.section) else {
+                    fatalError("Unknown section kind")
+                }
                 
-            case .waitingChats:
-                return self.configure(collectionView: collectionView, cellType: WaitingChatCell.self, with: chat, for: indexPath)
-                
-            }
-        })
+                switch section {
+                case .waitingChats:
+                     return self.configure(collectionView: collectionView, cellType: WaitingChatCell.self, with: chat, for: indexPath)
+                case .activeChats:
+                    return self.configure(collectionView: collectionView, cellType: ActiveChatCell.self, with: chat, for: indexPath)
+                }
+            })
+
         dataSource?.supplementaryViewProvider = {
             collectionView, kind, indexPath in
             guard let sectionHeader = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: SectionHeader.reuseID, for: indexPath) as? SectionHeader
@@ -107,6 +126,44 @@ extension ListViewController {
             else {fatalError("Unknown section kind")}
             sectionHeader.configure(text: section.description(), font: .laoSangamMN20(), textColor: .sectionHeaderColor())
             return sectionHeader
+        }
+    }
+}
+
+// MARK: - WaitindChatNavigationDelegate
+
+extension ListViewController: WaitingChatsNavigation {
+    func removeWaitingChat(chat: MChat) {
+        FirestoreService.shared.deleteWaitingChat(chat: chat) { result in
+            switch result {
+            case .success():
+                self.showAlert(with: "Успешно", and: "Чат с \(chat.friendUsername) удален")
+            case .failure(let error):
+                self.showAlert(with: "Ошибка!", and: error.localizedDescription)
+            }
+        }
+    }
+    
+    func makeChatActive(chat: MChat) {
+        print(#function)
+    }
+    
+    
+}
+
+// MARK: - UICollectionViewDelegate
+
+extension ListViewController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard let chat = self.dataSource?.itemIdentifier(for: indexPath) else {return}
+        guard let section = Section(rawValue: indexPath.section) else {return}
+        switch section {
+        case .waitingChats:
+        let chatRequestVC = ChatRequestViewController(chat: chat)
+            chatRequestVC.delegate = self
+            self.present(chatRequestVC, animated: true)
+        case .activeChats:
+            print(indexPath)
         }
     }
 }

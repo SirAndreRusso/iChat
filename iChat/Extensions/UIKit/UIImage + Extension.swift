@@ -15,7 +15,7 @@ extension UIImage {
         return image(scaledTo: newImageSize)
     }
     
-    func image(scaledTo size: CGSize) -> UIImage? {
+    private func image(scaledTo size: CGSize) -> UIImage? {
         defer {
             UIGraphicsEndImageContext()
         }

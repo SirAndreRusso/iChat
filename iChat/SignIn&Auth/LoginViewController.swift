@@ -35,9 +35,20 @@ class LoginViewController: UIViewController {
         view.backgroundColor = .white
         setUpConstraints()
         setUpButtonsActions()
+        setUpTextFields()
         
     }
+    
+// MARK: - setUpTextFields
+    
+    private func setUpTextFields() {
+        emailTextField.delegate = self
+        passwordTextField.delegate = self
+        emailTextField.returnKeyType = .next
+        passwordTextField.returnKeyType = .go
+    }
 }
+
 // MARK: - setUpButtons Actions
 
 extension LoginViewController {
@@ -48,18 +59,19 @@ extension LoginViewController {
                  switch result {
                      
                  case .success(let user):
-                     UIApplication.getTopViewController()?.showAlert(with: "", and: "Вы успешно авторизованы") {
+                     self.showAlert(with: "", and: "Вы успешно авторизованы") {
                          FirestoreService.shared.getUserData(user: user) { (result) in
                              switch result {
                                  
                              case .success(let muser):
                                  let mainTabBar = MainTabBarController(currentUser: muser)
                                  mainTabBar.modalPresentationStyle = .fullScreen
-                                 UIApplication.getTopViewController()?.present(mainTabBar, animated: true)
+                                 self.present(mainTabBar, animated: true)
                                  
-                             case .failure(_):
-                                 UIApplication.getTopViewController()?.showAlert(with: "Успешно!", and: "Вы зарегистрированы")
-                                 UIApplication.getTopViewController()?.present(SetUpProfileViewController(currentUser: user), animated: true)
+                             case .failure(let error):
+                                 print(error.localizedDescription)
+                                 self.showAlert(with: "Успешно!", and: "Вы зарегистрированы")
+                                 self.present(SetUpProfileViewController(currentUser: user), animated: true)
                              }
                          }
                      }
@@ -141,6 +153,21 @@ extension LoginViewController {
     }
 }
 
+// MARK: - UITextfieldDelegate
+
+extension LoginViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        switch textField {
+        case emailTextField:
+            passwordTextField.becomeFirstResponder()
+        case passwordTextField:
+            passwordTextField.resignFirstResponder()
+        default:
+            break
+        }
+        return true
+    }
+}
 // MARK: - SwiftUI
 
 import SwiftUI

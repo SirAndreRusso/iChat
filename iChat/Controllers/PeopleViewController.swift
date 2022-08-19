@@ -12,8 +12,8 @@ import FirebaseFirestore
 class PeopleViewController: UIViewController {
     //    var users: [MUser] = Bundle.main.decode([MUser].self, from: "users.json")
     private let currentUser: MUser
-    var users = [MUser]()
     private var usersListener: ListenerRegistration?
+    var users = [MUser]()
     var collectionView: UICollectionView!
     var dataSource: UICollectionViewDiffableDataSource<Section, MUser>!
     enum Section: Int, CaseIterable{
@@ -26,7 +26,7 @@ class PeopleViewController: UIViewController {
         }
     }
     
-    // MARK: - currentUser init
+    // MARK: - currentUser init, userListener deinit
     
     init(currentUser: MUser){
         self.currentUser = currentUser
@@ -34,13 +34,12 @@ class PeopleViewController: UIViewController {
         //Отображаем имя пользователя в заголовке VC
         title = currentUser.username
     }
-    deinit {
-        usersListener?.remove()
-    }
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+    deinit {
+        usersListener?.remove()
+    }
 // MARK: - viewDidLoad()
     
     override func viewDidLoad() {
@@ -54,7 +53,7 @@ class PeopleViewController: UIViewController {
 // MARK: - userListenerSetUp
     
     private func userListenerSetUp() {
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Log Out", style: .plain, target: self, action: #selector(signOut))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Sign Out", style: .plain, target: self, action: #selector(signOut))
         usersListener = ListenerService.shared.usersObserve(users: users, completion: { [weak self] (result) in
             guard let self = self else {return}
             switch result {

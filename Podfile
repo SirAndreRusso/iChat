@@ -12,5 +12,6 @@ pod 'FirebaseFirestore'
 pod 'GoogleSignIn' , '~> 6.2.2'
 pod 'FirebaseStorage'
 pod 'SDWebImage'
+pod 'IQKeyboardManagerSwift'
 
 end

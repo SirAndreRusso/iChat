@@ -16,6 +16,9 @@ class FirestoreService{
     private var userRef: CollectionReference {
         return db.collection("users")
     }
+    private var waitingChatsRef: CollectionReference {
+        return db.collection(["users", currentUser.id, "waitingChats"].joined(separator: "/"))
+    }
     var currentUser: MUser!
     func getUserData(user: User, completion: @escaping (Result<MUser, Error>) -> Void){
         let docRef = userRef.document(user.uid)
@@ -37,34 +40,43 @@ class FirestoreService{
             completion(.failure(UserError.notFilled))
             return
         }
-        guard avatarImage != UIImage(named: "Avatar") else {
-            completion(.failure(UserError.photoNotExists))
-            return
-        }
-        
-        var muser = MUser(username: username!, email: email, description: description!, gender: gender!, avatarStringURL: "NotExist", id: id)
-        StorageService.shared.uploadImage(photo: avatarImage!) { (result) in
-            //
-            switch result {
-            case .success(let url):
-                muser.avatarStringURL = url.absoluteString
-                self.userRef.document(muser.id).setData(muser.representation) { (error) in
-                    if let error = error {
-                        completion(.failure(error))
-                    } else {
-                        completion(.success(muser))
+        if avatarImage == UIImage(named: "Avatar") {
+            let defaultAvatar = UIImage(named: "Avatar-placeholder")?.scaledToSafeUploadSize
+            var muser = MUser(username: username!, email: email, description: description!, gender: gender!, avatarStringURL: "NotExist", id: id)
+            StorageService.shared.uploadImage(photo: defaultAvatar!) { (result) in
+                //
+                switch result {
+                case .success(let url):
+                    muser.avatarStringURL = url.absoluteString
+                    self.userRef.document(muser.id).setData(muser.representation) { (error) in
+                        if let error = error {
+                            completion(.failure(error))
+                        } else {
+                            completion(.success(muser))
+                        }
                     }
+                case .failure(let error):
+                    completion(.failure(error))
                 }
-            case .failure(let error):
-                completion(.failure(error))
             }
+        } else {
             
-        }
-        self.userRef.document(muser.id).setData(muser.representation) { (error) in
-            if let error = error {
-                completion(.failure(error))
-            } else {
-                completion(.success(muser))
+            var muser = MUser(username: username!, email: email, description: description!, gender: gender!, avatarStringURL: "NotExist", id: id)
+            StorageService.shared.uploadImage(photo: avatarImage!.scaledToSafeUploadSize!) { (result) in
+                //
+                switch result {
+                case .success(let url):
+                    muser.avatarStringURL = url.absoluteString
+                    self.userRef.document(muser.id).setData(muser.representation) { (error) in
+                        if let error = error {
+                            completion(.failure(error))
+                        } else {
+                            completion(.success(muser))
+                        }
+                    }
+                case .failure(let error):
+                    completion(.failure(error))
+                }
             }
         }
     }
@@ -87,6 +99,54 @@ class FirestoreService{
                     return
                 }
                 completion(.success(Void()))
+            }
+        }
+    }
+    func deleteWaitingChat(chat: MChat, completion: @escaping (Result<Void, Error>) -> Void) {
+        waitingChatsRef.document(chat.friendId).delete { error in
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+            completion(.success(Void()))
+            self.deleteMessages(chat: chat, completion: completion)
+        }
+    }
+    func deleteMessages(chat: MChat, completion: @escaping (Result<Void, Error>)-> Void) {
+        let reference = waitingChatsRef.document(chat.friendId).collection("messages")
+        getWaitingChatMessages(chat: chat) { result in
+            switch result {
+                
+            case .success(let messages):
+                for message in messages {
+                    guard let documentID = message.id else {return}
+                    let messageRef = reference.document(documentID)
+                    messageRef.delete { error in
+                        if let error = error {
+                            completion(.failure(error))
+                            return
+                        }
+                        completion(.success(Void()))
+                    }
+                }
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+    func getWaitingChatMessages(chat: MChat, completion: @escaping (Result<[MMessage], Error>)-> Void) {
+        let reference = waitingChatsRef.document(chat.friendId).collection("messages")
+        var messages = [MMessage]()
+        reference.getDocuments { querySnapshot, error in
+            if let error = error {
+                completion(.failure(error))
+            } else {
+                guard let snapShot = querySnapshot else {return}
+                for document in snapShot.documents {
+                    guard let message = MMessage(document: document) else {return}
+                    messages.append(message)
+                }
+                completion(.success(messages))
             }
         }
     }
