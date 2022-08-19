@@ -39,6 +39,7 @@
 		B4584688288EF66C0036D940 /* activeChats.json in Resources */ = {isa = PBXBuildFile; fileRef = B4584687288EF66C0036D940 /* activeChats.json */; };
 		B458468A288EF6B20036D940 /* users.json in Resources */ = {isa = PBXBuildFile; fileRef = B4584689288EF6B20036D940 /* users.json */; };
 		B47609B32899B8EF0066BAE8 /* (null) in Embed Frameworks */ = {isa = PBXBuildFile; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		B494F4C828AFDB0C00D7BE87 /* ChatsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B494F4C728AFDB0C00D7BE87 /* ChatsViewController.swift */; };
 		B4A767792880441800FB84E4 /* ActiveChatCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4A767782880441800FB84E4 /* ActiveChatCell.swift */; };
 		B4A7677B2880604600FB84E4 /* GradientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4A7677A2880604600FB84E4 /* GradientView.swift */; };
 		B4A7677D28806D8900FB84E4 /* WaitingChatCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4A7677C28806D8900FB84E4 /* WaitingChatCell.swift */; };
@@ -109,6 +110,7 @@
 		B4584685288EF6630036D940 /* waitingChats.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = waitingChats.json; sourceTree = "<group>"; };
 		B4584687288EF66C0036D940 /* activeChats.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = activeChats.json; sourceTree = "<group>"; };
 		B4584689288EF6B20036D940 /* users.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = users.json; sourceTree = "<group>"; };
+		B494F4C728AFDB0C00D7BE87 /* ChatsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatsViewController.swift; sourceTree = "<group>"; };
 		B4A767782880441800FB84E4 /* ActiveChatCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveChatCell.swift; sourceTree = "<group>"; };
 		B4A7677A2880604600FB84E4 /* GradientView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientView.swift; sourceTree = "<group>"; };
 		B4A7677C28806D8900FB84E4 /* WaitingChatCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaitingChatCell.swift; sourceTree = "<group>"; };
@@ -208,6 +210,7 @@
 				B426272A2874F1D800CA976D /* PeopleViewController.swift */,
 				B4D607C928875501008372CE /* ProfileViewController.swift */,
 				B4D607CF28887294008372CE /* ChatRequestViewController.swift */,
+				B494F4C728AFDB0C00D7BE87 /* ChatsViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -464,6 +467,7 @@
 				B4D607CE28885FF1008372CE /* UIView + Extension.swift in Sources */,
 				B4A7677F28806F0300FB84E4 /* SelfConfigurationCell.swift in Sources */,
 				B43C318628904E86009EBCB9 /* FireStoreService.swift in Sources */,
+				B494F4C828AFDB0C00D7BE87 /* ChatsViewController.swift in Sources */,
 				B40720B228A14E6700536B85 /* StorageService.swift in Sources */,
 				B4262723287392F600CA976D /* UISegmentedControl + Extension.swift in Sources */,
 				B4D607C628871BFA008372CE /* UserCell.swift in Sources */,
