@@ -22,14 +22,10 @@ class ActiveChatCell: UICollectionViewCell, SelfConfiguringCell{
         self.clipsToBounds = true
     }
     
-//    func configure(with value: MChat) {
-//        friendImageView.image = UIImage(named: value.userImageString)
-//        friendName.text = value.username
-//        lastMessage.text = value.lastMessage
-//    }
+
     func configure<U>(with value: U) where U : Hashable {
         guard let activeChat: MChat = value as? MChat else {return}
-        friendImageView.image = UIImage(named: activeChat.friendAvatarStringURL)
+        friendImageView.sd_setImage(with: URL(string: activeChat.friendAvatarStringURL), completed: nil)
         friendName.text = activeChat.friendUsername
         lastMessage.text = activeChat.lastMessageContent
     }

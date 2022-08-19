@@ -11,6 +11,7 @@ import FirebaseFirestore
 class ListViewController: UIViewController {
     private let currentUser: MUser
     private var waitingThatListener: ListenerRegistration?
+    private var activeThatListener: ListenerRegistration?
     var activeChats = [MChat]()
     var waitingChats = [MChat]()
     var collectionView: UICollectionView!
@@ -28,8 +29,8 @@ class ListViewController: UIViewController {
         }
     }
     
-// MARK: - currentUser init, waitingChatListener deinit
-    
+// MARK: - currentUser init, waitingChatListener, activeThatListener deinit
+     
     init(currentUser: MUser){
         self.currentUser = currentUser
         super.init(nibName: nil, bundle: nil)
@@ -41,6 +42,7 @@ class ListViewController: UIViewController {
     }
     deinit {
         waitingThatListener?.remove()
+        activeThatListener?.remove()
     }
 // MARK: - viewDidLoad()
     
@@ -60,6 +62,16 @@ class ListViewController: UIViewController {
                     self.present(chatRequestVC, animated: true)
                 }
                 self.waitingChats = waitingChats
+                self.reloadData()
+            case .failure(let error):
+                self.showAlert(with: "Ошибка!", and: error.localizedDescription)
+            }
+        })
+        activeThatListener = ListenerService.shared.activeChatsObserve(chats: activeChats, completion: { result in
+            switch result {
+                
+            case .success(let activeChats):
+                self.activeChats = activeChats
                 self.reloadData()
             case .failure(let error):
                 self.showAlert(with: "Ошибка!", and: error.localizedDescription)
@@ -146,6 +158,15 @@ extension ListViewController: WaitingChatsNavigation {
     
     func makeChatActive(chat: MChat) {
         print(#function)
+        FirestoreService.shared.changeToActive(chat: chat) { result in
+            switch result {
+                
+            case .success():
+                self.showAlert(with: "Успешно!", and: "Приятного общения с \(chat.friendUsername).")
+            case .failure(let error):
+                self.showAlert(with: "Ошибка!", and: error.localizedDescription)
+            }
+        }
     }
     
     
