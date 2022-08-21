@@ -13,7 +13,7 @@ import FirebaseAuth
 class FirestoreService{
     static let shared = FirestoreService()
     let db = Firestore.firestore()
-    private var userRef: CollectionReference {
+    private var usersRef: CollectionReference {
         return db.collection("users")
     }
     private var waitingChatsRef: CollectionReference {
@@ -24,7 +24,7 @@ class FirestoreService{
     }
     var currentUser: MUser!
     func getUserData(user: User, completion: @escaping (Result<MUser, Error>) -> Void){
-        let docRef = userRef.document(user.uid)
+        let docRef = usersRef.document(user.uid)
         docRef.getDocument { document, error in
             if let document = document, document.exists {
                 guard let muser = MUser(document: document) else {
@@ -51,7 +51,7 @@ class FirestoreService{
                 switch result {
                 case .success(let url):
                     muser.avatarStringURL = url.absoluteString
-                    self.userRef.document(muser.id).setData(muser.representation) { (error) in
+                    self.usersRef.document(muser.id).setData(muser.representation) { (error) in
                         if let error = error {
                             completion(.failure(error))
                         } else {
@@ -70,7 +70,7 @@ class FirestoreService{
                 switch result {
                 case .success(let url):
                     muser.avatarStringURL = url.absoluteString
-                    self.userRef.document(muser.id).setData(muser.representation) { (error) in
+                    self.usersRef.document(muser.id).setData(muser.representation) { (error) in
                         if let error = error {
                             completion(.failure(error))
                         } else {
@@ -192,6 +192,35 @@ class FirestoreService{
                 messageRef.addDocument(data: message.representation) { error in
                     if let error = error {
                         completion(.failure(error))
+                        return
+                    }
+                    completion(.success(Void()))
+                }
+            }
+        }
+    }
+    func sendMessage(chat: MChat, message: MMessage, completion: @escaping (Result<Void, Error>) -> Void) {
+        let friendRef = usersRef.document(chat.friendId).collection("activeChats").document(currentUser.id)
+        let friendMessageRef = friendRef.collection("messages")
+        let myMessageRef = usersRef.document(currentUser.id).collection("activeChats").document(chat.friendId).collection("messages")
+        
+        let chatForFriend = MChat(friendUsername: currentUser.username,
+                                  friendAvatarStringURL: currentUser.avatarStringURL,
+                                  lastMessageContent: message.content,
+                                  friendId: currentUser.id)
+        friendRef.setData(chatForFriend.representation) { error in
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+            friendMessageRef.addDocument(data: message.representation) { error in
+                if let error = error {
+                    completion(.failure(error))
+                    return
+                }
+                myMessageRef.addDocument(data: message.representation) { error in
+                    if let error = error {
+                        completion(.success(Void()))
                         return
                     }
                     completion(.success(Void()))

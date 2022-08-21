@@ -629,6 +629,8 @@
 				GCC_NO_COMMON_BLOCKS = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = iChat/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = "Хотите разрешить приложению  iChat  доступ к камере?";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Хотите разрешить приложению  iChat  доступ к фото?";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -659,6 +661,8 @@
 				GCC_NO_COMMON_BLOCKS = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = iChat/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = "Хотите разрешить приложению  iChat  доступ к камере?";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Хотите разрешить приложению  iChat  доступ к фото?";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
