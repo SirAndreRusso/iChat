@@ -249,12 +249,14 @@ extension ListViewController {
     }
 }
 // MARK: - UISearchBarDelegate
+
 extension ListViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         print(searchText)
     }
 }
 // MARK: - SwiftUI
+
 import SwiftUI
 struct ListViewControllerProvider: PreviewProvider {
     static var previews: some View {

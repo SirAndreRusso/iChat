@@ -9,13 +9,14 @@ import UIKit
 import SDWebImage
 
 class UserCell: UICollectionViewCell, SelfConfiguringCell {
-    let userImageView = UIImageView()
+    let userImageView = UIImageView(image: nil, contentMode: .scaleAspectFill)
     let userName = UILabel(text: "text", font: .laoSangamMN20())
     let containerView = UIView()
     
     static var reuseId: String = "UserCell"
     override init(frame: CGRect) {
         super .init(frame: frame)
+        self.userName.backgroundColor = .white
         backgroundColor = .white
         setupConstraints()
         self.layer.cornerRadius = 4
@@ -50,17 +51,18 @@ class UserCell: UICollectionViewCell, SelfConfiguringCell {
         
         
         //        userImageView.image = UIImage(named: user.avatarStringURL)
-        userName.text = user.username
+        userName.text = [" ", user.username].joined()
+        
     }
     private func setupConstraints() {
         userImageView.translatesAutoresizingMaskIntoConstraints = false
         userName.translatesAutoresizingMaskIntoConstraints = false
         containerView.translatesAutoresizingMaskIntoConstraints = false
-        userImageView.backgroundColor = .red
+        userImageView.backgroundColor = .mainWhite()
         
         addSubview(containerView)
-        containerView.addSubview(userName)
         containerView.addSubview(userImageView)
+        containerView.addSubview(userName)
         
         NSLayoutConstraint.activate([
             containerView.topAnchor.constraint(equalTo: self.topAnchor),
@@ -74,8 +76,8 @@ class UserCell: UICollectionViewCell, SelfConfiguringCell {
             userImageView.heightAnchor.constraint(equalTo: containerView.widthAnchor),
             
             userName.topAnchor.constraint(equalTo: userImageView.bottomAnchor),
-            userName.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 8),
-            userName.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -8),
+            userName.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+            userName.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
             userName.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
             
         ])

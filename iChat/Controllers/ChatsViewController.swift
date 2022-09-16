@@ -34,21 +34,21 @@ class ChatsViewController: MessagesViewController {
         messageListener?.remove()
     }
     
-// MARK: - viewDidLoad()
+    // MARK: - viewDidLoad()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        if let layout = messagesCollectionView.collectionViewLayout as?  MessagesCollectionViewFlowLayout {
-            layout.textMessageSizeCalculator.outgoingAvatarSize = .zero
-            layout.textMessageSizeCalculator.incomingAvatarSize = .zero
-            layout.photoMessageSizeCalculator.incomingAvatarSize = .zero
-            layout.photoMessageSizeCalculator.outgoingAvatarSize = .zero
-        }
+        messagesCollectionView.backgroundColor = .mainWhite()
+        removeAvatar()
         configureMessageInputBar()
         delegatesSetUp()
-        messagesCollectionView.backgroundColor = .mainWhite()
-        // solves the problem when messages starts from over the navigation bar
+        setUpMessageListener()
         IQKeyboardManager.shared.disabledDistanceHandlingClasses.append(ChatsViewController.self)
+    }
+    
+    // MARK: - Setup messageListener
+    
+    private func setUpMessageListener () {
         messageListener = ListenerService.shared.messagesObserve(chat: chat, completion: { result in
             
             switch result {
@@ -66,7 +66,8 @@ class ChatsViewController: MessagesViewController {
                         }
                     }
                 } else {
-                self.insertNewMessage(message: message)
+                    
+                    self.insertNewMessage(message: message)
                 }
             case .failure(let error):
                 self.showAlert(with: "Ошибка!", and: error.localizedDescription)
@@ -106,6 +107,7 @@ class ChatsViewController: MessagesViewController {
                     switch result {
                         
                     case .success():
+                        self.messagesCollectionView.reloadData()
                         self.messagesCollectionView.scrollToLastItem()
                         
                     case .failure(_):
@@ -196,6 +198,7 @@ extension ChatsViewController: MessagesDataSource {
     
     func messageForItem(at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> MessageType {
         return messages[indexPath.item]
+        
     }
     
     func numberOfSections(in messagesCollectionView: MessagesCollectionView) -> Int {
@@ -205,18 +208,14 @@ extension ChatsViewController: MessagesDataSource {
         messages.count
     }
     func cellTopLabelAttributedText(for message: MessageType, at indexPath: IndexPath) -> NSAttributedString? {
+        if message.sentDate != Date() {
+            print("DFDFDF")
+            return NSAttributedString(string: MessageKitDateFormatter.shared.string(from: message.sentDate),
+                                      attributes: [NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 10),
+                                                   NSAttributedString.Key.foregroundColor: UIColor.darkGray])
+        } else {return nil}
         
-        // TODO: - придумать логику, чтобы дата показывалась только на первом сообщении за день
-        // showing the date of every 4th message
-        if indexPath.item % 4 == 0 {
-        return NSAttributedString(string: MessageKitDateFormatter.shared.string(from: message.sentDate),
-                                  attributes: [NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 10),
-                                               NSAttributedString.Key.foregroundColor: UIColor.darkGray])
-        } else {
-            return nil
-        }
     }
-    
 }
 
 // MARK: - MessagesLayoutDelegate
@@ -225,14 +224,28 @@ extension ChatsViewController: MessagesLayoutDelegate {
     func footerViewSize(for section: Int, in messagesCollectionView: MessagesCollectionView) -> CGSize {
         return CGSize(width: 0, height: 8)
     }
-    // TODO: - После изменения логики показа даты сообщения изменить логику здесь
+    
+       // Лейбл с датой видно только когда дата в  сообщении отличается от даты предыдущего сообщения, и всегда виден у первого сообщения
+    
     func cellTopLabelHeight(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> CGFloat {
-        if indexPath.item % 4 == 0 {
-            return 30
-        } else {
+        guard indexPath.item > 0 else {return 30}
+        let previousIndexPath = IndexPath(item: indexPath.item - 1, section: indexPath.section)
+        let previousMessage = messageForItem(at: previousIndexPath, in: messagesCollectionView)
+        if message.sentDate.isInSameDayOf(date: previousMessage.sentDate){
             return 0
+        } else {
+            return 30
         }
     }
+    private func removeAvatar() {
+        if let layout = messagesCollectionView.collectionViewLayout as?  MessagesCollectionViewFlowLayout {
+            layout.textMessageSizeCalculator.outgoingAvatarSize = .zero
+            layout.textMessageSizeCalculator.incomingAvatarSize = .zero
+            layout.photoMessageSizeCalculator.incomingAvatarSize = .zero
+            layout.photoMessageSizeCalculator.outgoingAvatarSize = .zero
+        }
+    }
+    
 }
 
 // MARK: - MessagesDisplayDelegate
@@ -267,6 +280,7 @@ extension ChatsViewController: InputBarAccessoryViewDelegate {
         FirestoreService.shared.sendMessage(chat: chat, message: message) { result in
             switch result {
             case .success():
+                self.messagesCollectionView.reloadData()
                 self.messagesCollectionView.scrollToLastItem()
             case .failure(let error):
                 self.showAlert(with: "Ошибка!", and: error.localizedDescription)

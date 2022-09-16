@@ -15,6 +15,7 @@ class AddPhotoView: UIView {
         imageView.clipsToBounds = true
         imageView.layer.borderColor = UIColor.black.cgColor
         imageView.layer.borderWidth = 2
+        imageView.contentMode = .scaleAspectFill
         return imageView
     }()
     let plusButton: UIButton = {
