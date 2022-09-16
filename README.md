@@ -51,4 +51,5 @@ Here is my first messenger iChat!
  - Image picking from gallery works with PHPickerViewController instead of deprecated UIImagePickerController
  - Users can have default avatar
  - In chat messages sent date is shown only if the date was changed after previous message
+ 
  and others...
